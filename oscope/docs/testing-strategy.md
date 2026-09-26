@@ -6,8 +6,10 @@ Ensuring correctness in a CPU simulator is critical. OScope adopts a rigorous te
 ## 2. Backend Testing (Pytest)
 - **Framework:** Pytest.
 - **Scheduling Engine (Unit Tests):** 
-  - Every scheduling algorithm will have a dedicated test suite with known workloads and deterministic expected outputs (Gantt charts and metrics).
-  - Metrics engine must be tested independently.
+  - Every algorithm has a dedicated test suite covering its specific logic.
+  - Expanded coverage includes: simultaneous arrivals, preemption boundaries, idle periods, invalid quantum values, and tie-breaking scenarios (SJF multiple ready, SRTF equal remaining times, RR queue ordering).
+  - Centralized metrics engine is tested to rigorously verify Completion Time, Turnaround Time, Waiting Time, Response Time, CPU Utilization, and Throughput calculations.
+  - Invalid inputs (negative burst time, zero quantum) trigger `ValidationError` or explicit exceptions.
 - **ML Module:** 
   - Test feature extraction logic.
   - Verify that the model loads correctly and inference outputs the expected schema.
