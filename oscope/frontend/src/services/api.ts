@@ -14,5 +14,6 @@ export const api = {
   saveHistory: (req: any) => client.post('/history', req),
   listHistory: () => client.get<ExperimentSummary[]>('/history'),
   getHistory: (id: number) => client.get<ExperimentDetails>(`/history/${id}`),
-  deleteHistory: (id: number) => client.delete(`/history/${id}`)
+  deleteHistory: (id: number) => client.delete(`/history/${id}`),
+  recommend: (req: any) => client.post('/recommend', req)
 };

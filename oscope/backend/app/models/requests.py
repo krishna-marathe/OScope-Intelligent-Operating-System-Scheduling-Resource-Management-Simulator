@@ -32,3 +32,14 @@ class HistoryCreateRequest(BaseModel):
     time_quantum: Optional[int] = None
     processes: List[Process]
     simulation_result: SimulationResult
+
+class RecommendRequest(BaseModel):
+    processes: List[Process] = Field(..., min_length=1)
+    objective: str = Field("awt", description="Optimization objective, e.g. awt")
+    
+    @field_validator('processes')
+    def check_duplicate_ids(cls, v):
+        ids = [p.id for p in v]
+        if len(ids) != len(set(ids)):
+            raise ValueError('Duplicate process IDs are not allowed')
+        return v
