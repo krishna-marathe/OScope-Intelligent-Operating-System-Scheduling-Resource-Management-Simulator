@@ -3,16 +3,22 @@
 ## 1. Common Schemas
 
 ### 1.1 Process Schema
+All endpoints accept processes in the following format:
 ```json
 {
   "id": "string",
-  "arrival_time": "integer",
-  "burst_time": "integer",
+  "arrival_time": "integer (>= 0)",
+  "burst_time": "integer (> 0)",
   "priority": "integer (optional, default 0)"
 }
 ```
+*Validation:* 
+- `burst_time` must be strictly positive.
+- `arrival_time` cannot be negative.
+- Duplicate `id` values within the same request are rejected.
 
 ### 1.2 Simulation Result Schema
+Algorithms return consistent Gantt events and metrics:
 ```json
 {
   "gantt_chart": [
@@ -41,44 +47,68 @@
 }
 ```
 
-## 2. Endpoints
+## 2. API Endpoints (v1)
 
-### 2.1 `POST /api/v1/simulate`
-Executes a scheduling simulation.
-
-**Request Body:**
+### 2.1 `GET /api/v1/health`
+Health-check endpoint for application monitoring.
+**Response (200 OK):**
 ```json
 {
-  "algorithm": "string (e.g., 'FCFS', 'SRTF', 'RR')",
-  "time_quantum": "integer (optional, required for RR)",
-  "processes": [ /* Array of Process Schema */ ]
+  "status": "ok",
+  "version": "1.0",
+  "scheduling_engine": "available"
+}
+```
+
+### 2.2 `POST /api/v1/simulate`
+Executes a scheduling simulation.
+
+**Request Body (`SimulationRequest`):**
+```json
+{
+  "algorithm": "string (e.g., 'FCFS', 'SJF', 'SRTF', 'RR', 'PRIORITY_NP', 'PRIORITY_P')",
+  "time_quantum": "integer (optional, required if algorithm is 'RR')",
+  "processes": [
+    { "id": "P1", "arrival_time": 0, "burst_time": 5 }
+  ]
 }
 ```
 
 **Response (200 OK):**
 Returns the `Simulation Result Schema`.
 
-### 2.2 `POST /api/v1/recommend`
-Provides an ML-based recommendation for the given workload.
+**Error Responses:**
+- `400 Bad Request`: If algorithm is unsupported, or `time_quantum` is missing/invalid for `RR`.
+- `422 Unprocessable Entity`: If `processes` list is empty, contains duplicate IDs, or breaks schema validation (e.g., negative burst times).
 
-**Request Body:**
+### 2.3 `POST /api/v1/compare`
+Executes the same workload against multiple scheduling algorithms simultaneously for comparison.
+
+**Request Body (`ComparisonRequest`):**
 ```json
 {
-  "objective": "string (e.g., 'minimize_waiting_time')",
-  "processes": [ /* Array of Process Schema */ ]
+  "algorithms": ["FCFS", "RR", "SRTF"],
+  "time_quantum": 2,
+  "processes": [
+    { "id": "P1", "arrival_time": 0, "burst_time": 5 }
+  ]
 }
 ```
 
 **Response (200 OK):**
+Returns a dictionary mapping the requested algorithm names to their respective `Simulation Result Schema`.
 ```json
 {
-  "recommended_algorithm": "string",
-  "confidence_score": "float",
-  "features_extracted": { /* object */ },
-  "disclaimer": "This recommendation is based on ML prediction and is not universally optimal."
+  "FCFS": { /* Simulation Result Schema */ },
+  "RR": { /* Simulation Result Schema */ },
+  "SRTF": { /* Simulation Result Schema */ }
 }
 ```
+**Error Responses:**
+Matches the validation and error conditions of `/api/v1/simulate`.
 
-### 2.3 `GET /api/v1/history`
-Retrieves past simulation experiments.
-**(To be detailed in Phase 1)**
+### 2.4 `POST /api/v1/recommend`
+*(To be implemented in ML phase)*
+
+### 2.5 `GET /api/v1/history`
+*(To be implemented in DB phase)*
