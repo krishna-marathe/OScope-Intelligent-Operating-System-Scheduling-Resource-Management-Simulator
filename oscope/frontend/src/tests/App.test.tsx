@@ -63,7 +63,7 @@ test('simulates and renders result', async () => {
   fireEvent.click(screen.getByTestId('simulate-btn'));
   
   await waitFor(() => {
-    expect(screen.getByTestId('metric-awt')).toHaveTextContent('Avg Wait: 0.00');
-    expect(screen.getByTestId('gantt-chart')).toBeInTheDocument();
+    expect(screen.getByTestId('metric-awt')).toHaveTextContent('0.00');
+    expect(screen.getByTestId('gantt-chart-interactive')).toBeInTheDocument();
   });
 });

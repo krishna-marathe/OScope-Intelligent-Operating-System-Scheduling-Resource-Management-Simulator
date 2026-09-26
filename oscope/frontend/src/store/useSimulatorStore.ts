@@ -9,6 +9,10 @@ interface SimulatorState {
   loading: boolean;
   error: string | null;
   
+  currentTime: number;
+  isPlaying: boolean;
+  playbackSpeed: number;
+  
   addProcess: (p: Process) => void;
   removeProcess: (id: string) => void;
   clearProcesses: () => void;
@@ -17,6 +21,11 @@ interface SimulatorState {
   setResult: (res: SimulationResult | null) => void;
   setLoading: (l: boolean) => void;
   setError: (e: string | null) => void;
+  
+  setCurrentTime: (time: number) => void;
+  setIsPlaying: (play: boolean) => void;
+  setPlaybackSpeed: (speed: number) => void;
+  resetPlayback: () => void;
 }
 
 export const useSimulatorStore = create<SimulatorState>((set) => ({
@@ -27,12 +36,21 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
   loading: false,
   error: null,
   
+  currentTime: 0,
+  isPlaying: false,
+  playbackSpeed: 1,
+  
   addProcess: (p) => set((state) => ({ processes: [...state.processes, p] })),
   removeProcess: (id) => set((state) => ({ processes: state.processes.filter(p => p.id !== id) })),
   clearProcesses: () => set({ processes: [] }),
   setAlgorithm: (alg) => set({ algorithm: alg }),
   setTimeQuantum: (tq) => set({ timeQuantum: tq }),
-  setResult: (res) => set({ result: res }),
+  setResult: (res) => set({ result: res, currentTime: 0, isPlaying: false }),
   setLoading: (l) => set({ loading: l }),
   setError: (e) => set({ error: e }),
+  
+  setCurrentTime: (time) => set({ currentTime: time }),
+  setIsPlaying: (play) => set({ isPlaying: play }),
+  setPlaybackSpeed: (speed) => set({ playbackSpeed: speed }),
+  resetPlayback: () => set({ currentTime: 0, isPlaying: false }),
 }));
