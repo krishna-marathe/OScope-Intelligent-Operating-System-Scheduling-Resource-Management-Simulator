@@ -4,7 +4,7 @@ import { api } from '../services/api';
 import { SimulationResult } from '../types';
 
 export function Compare() {
-  const { processes, timeQuantum } = useSimulatorStore();
+  const { processes, timeQuantum, contextSwitchCost, mlqConfig, mlfqConfig } = useSimulatorStore();
   const [selectedAlgos, setSelectedAlgos] = useState<string[]>([]);
   const [results, setResults] = useState<Record<string, SimulationResult> | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,10 @@ export function Compare() {
       const res = await api.compare({
         algorithms: selectedAlgos,
         processes,
-        time_quantum: timeQuantum
+        time_quantum: timeQuantum,
+        context_switch_cost: contextSwitchCost,
+        mlq_config: mlqConfig,
+        mlfq_config: mlfqConfig
       });
       setResults(res.data);
     } catch (e: any) {
@@ -39,7 +42,7 @@ export function Compare() {
     }
   };
 
-  const algos = ['FCFS', 'SJF', 'SRTF', 'RR', 'PRIORITY_NP', 'PRIORITY_P'];
+  const algos = ['FCFS', 'SJF', 'SRTF', 'RR', 'PRIORITY_NP', 'PRIORITY_P', 'MLQ', 'MLFQ'];
 
   return (
     <div className="space-y-6">

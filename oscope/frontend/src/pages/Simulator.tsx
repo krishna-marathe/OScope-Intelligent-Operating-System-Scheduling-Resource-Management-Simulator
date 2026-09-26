@@ -7,7 +7,7 @@ import { api } from '../services/api';
 
 export function Simulator() {
   const { 
-    processes, algorithm, timeQuantum, 
+    processes, algorithm, timeQuantum, contextSwitchCost, mlqConfig, mlfqConfig, 
     setResult, setLoading, setError, loading, error 
   } = useSimulatorStore();
 
@@ -18,7 +18,10 @@ export function Simulator() {
       const res = await api.simulate({
         algorithm,
         processes,
-        time_quantum: algorithm === 'RR' ? timeQuantum : undefined
+        time_quantum: algorithm === 'RR' ? timeQuantum : undefined,
+        context_switch_cost: contextSwitchCost,
+        mlq_config: algorithm === 'MLQ' ? mlqConfig : undefined,
+        mlfq_config: algorithm === 'MLFQ' ? mlfqConfig : undefined
       });
       setResult(res.data);
     } catch (e: any) {

@@ -29,19 +29,20 @@ export function GanttChart() {
           const duration = ev.end_time - ev.start_time;
           const widthPct = (duration / maxTime) * 100;
           const isIdle = ev.process_id === 'IDLE';
-          const bgColor = isIdle ? 'bg-slate-300' : processColors[ev.process_id];
+          const isCS = ev.process_id === 'CS';
+          const bgColor = isIdle ? 'bg-slate-300' : isCS ? 'bg-red-500' : processColors[ev.process_id];
           
           // Determine how much of this block is visible based on currentTime
           const visibleDuration = Math.max(0, Math.min(duration, currentTime - ev.start_time));
           const visibleWidthPct = (visibleDuration / duration) * 100;
 
           return (
-            <div key={idx} style={{ width: `${widthPct}%` }} className="h-full border-r border-white/50 relative bg-slate-100" title={`${ev.process_id}: ${ev.start_time} - ${ev.end_time}`}>
+            <div key={idx} style={{ width: `${widthPct}%` }} className="h-full border-r border-white/50 relative bg-slate-100" title={`${ev.process_id}${ev.queue_id ? ` (Q${ev.queue_id})` : ''}: ${ev.start_time} - ${ev.end_time}`}>
                {/* Background fill based on playback */}
                <div className={`h-full ${bgColor} transition-all duration-200 ease-linear`} style={{ width: `${visibleWidthPct}%` }} />
                {/* Label */}
                <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-800 mix-blend-hard-light">
-                 {ev.process_id}
+                 {ev.process_id}{ev.queue_id ? ` (Q${ev.queue_id})` : ''}
                </div>
             </div>
           );

@@ -1,3 +1,9 @@
+import os
+
+frontend_dir = r"c:\Users\marat\Downloads\3 rd Year\OS_LAB\Operating_system_CP\oscope\frontend"
+selector_file = os.path.join(frontend_dir, "src/features/simulator/AlgorithmSelector.tsx")
+
+new_code = """\
 import React from 'react';
 import { useSimulatorStore } from '../../store/useSimulatorStore';
 import { QueueConfig } from '../../types';
@@ -180,3 +186,7 @@ export function AlgorithmSelector() {
     </div>
   );
 }
+"""
+
+with open(selector_file, "w") as f:
+    f.write(new_code)

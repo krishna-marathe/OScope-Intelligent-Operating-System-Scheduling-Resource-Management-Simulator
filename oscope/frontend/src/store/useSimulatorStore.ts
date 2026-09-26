@@ -1,10 +1,13 @@
 import { create } from 'zustand';
-import { Process, SimulationResult } from '../types';
+import { Process, SimulationResult, MLQConfig, MLFQConfig } from '../types';
 
 interface SimulatorState {
   processes: Process[];
   algorithm: string;
   timeQuantum: number;
+  contextSwitchCost: number;
+  mlqConfig?: MLQConfig;
+  mlfqConfig?: MLFQConfig;
   result: SimulationResult | null;
   loading: boolean;
   error: string | null;
@@ -18,6 +21,9 @@ interface SimulatorState {
   clearProcesses: () => void;
   setAlgorithm: (alg: string) => void;
   setTimeQuantum: (tq: number) => void;
+  setContextSwitchCost: (cost: number) => void;
+  setMlqConfig: (config: MLQConfig) => void;
+  setMlfqConfig: (config: MLFQConfig) => void;
   setResult: (res: SimulationResult | null) => void;
   setLoading: (l: boolean) => void;
   setError: (e: string | null) => void;
@@ -32,6 +38,23 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
   processes: [],
   algorithm: 'FCFS',
   timeQuantum: 2,
+  contextSwitchCost: 0,
+  mlqConfig: {
+    queues: [
+      { id: 1, priority: 1, policy: 'RR', time_quantum: 4 },
+      { id: 2, priority: 2, policy: 'FCFS' }
+    ],
+    process_assignments: {},
+    inter_queue_policy: 'FIXED_PRIORITY'
+  },
+  mlfqConfig: {
+    queues: [
+      { id: 1, priority: 1, policy: 'RR', time_quantum: 2 },
+      { id: 2, priority: 2, policy: 'RR', time_quantum: 4 },
+      { id: 3, priority: 3, policy: 'FCFS' }
+    ],
+    boost_interval: 20
+  },
   result: null,
   loading: false,
   error: null,
@@ -45,6 +68,9 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
   clearProcesses: () => set({ processes: [] }),
   setAlgorithm: (alg) => set({ algorithm: alg }),
   setTimeQuantum: (tq) => set({ timeQuantum: tq }),
+  setContextSwitchCost: (cost) => set({ contextSwitchCost: cost }),
+  setMlqConfig: (config) => set({ mlqConfig: config }),
+  setMlfqConfig: (config) => set({ mlfqConfig: config }),
   setResult: (res) => set({ result: res, currentTime: 0, isPlaying: false }),
   setLoading: (l) => set({ loading: l }),
   setError: (e) => set({ error: e }),

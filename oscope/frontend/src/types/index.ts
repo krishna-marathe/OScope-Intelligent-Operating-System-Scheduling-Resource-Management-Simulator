@@ -1,3 +1,25 @@
+
+export interface QueueConfig {
+  id: number;
+  priority: number;
+  policy: string;
+  time_quantum?: number;
+  context_switch_cost?: number;
+  mlq_config?: MLQConfig;
+  mlfq_config?: MLFQConfig;
+}
+
+export interface MLQConfig {
+  queues: QueueConfig[];
+  process_assignments: Record<string, number>;
+  inter_queue_policy: string;
+}
+
+export interface MLFQConfig {
+  queues: QueueConfig[];
+  boost_interval?: number;
+}
+
 export interface Process {
   id: string;
   arrival_time: number;
@@ -6,6 +28,7 @@ export interface Process {
 }
 
 export interface GanttEvent {
+  queue_id?: number;
   process_id: string;
   start_time: number;
   end_time: number;
@@ -37,6 +60,9 @@ export interface SimulationRequest {
   algorithm: string;
   processes: Process[];
   time_quantum?: number;
+  context_switch_cost?: number;
+  mlq_config?: MLQConfig;
+  mlfq_config?: MLFQConfig;
 }
 
 export interface ExperimentSummary {
@@ -48,6 +74,9 @@ export interface ExperimentSummary {
 
 export interface ExperimentDetails extends ExperimentSummary {
   time_quantum?: number;
+  context_switch_cost?: number;
+  mlq_config?: MLQConfig;
+  mlfq_config?: MLFQConfig;
   processes: Process[];
   simulation_result: SimulationResult;
 }
