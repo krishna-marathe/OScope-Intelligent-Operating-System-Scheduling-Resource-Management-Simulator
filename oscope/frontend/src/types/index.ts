@@ -38,3 +38,16 @@ export interface SimulationRequest {
   processes: Process[];
   time_quantum?: number;
 }
+
+export interface ExperimentSummary {
+  id: number;
+  name: string;
+  algorithm: string;
+  created_at: string;
+}
+
+export interface ExperimentDetails extends ExperimentSummary {
+  time_quantum?: number;
+  processes: Process[];
+  simulation_result: SimulationResult;
+}
