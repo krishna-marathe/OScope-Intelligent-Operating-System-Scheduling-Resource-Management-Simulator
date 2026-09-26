@@ -43,3 +43,15 @@ To ensure deterministic execution across all simulations:
 - **Equal Parameters (Burst Time / Priority):** Tie-broken by `arrival_time`, then `id`.
 - **Round Robin:** Preempted processes are re-queued *after* newly arrived processes at that exact timestamp.
 - **IDLE CPU:** Represented explicitly with `IDLE` events in the Gantt chart if no processes are ready.
+
+
+## Advanced Scheduling Algorithms (Phase 7A)
+
+### Multilevel Queue (MLQ)
+Processes are permanently assigned to one of several queues based on their properties. Each queue can have its own scheduling algorithm (e.g., Round Robin, FCFS). Queues are strictly prioritized (inter-queue policy: FIXED_PRIORITY). A process in a lower-priority queue will only execute if all higher-priority queues are empty. It can be preempted by new arrivals in higher-priority queues.
+
+### Multilevel Feedback Queue (MLFQ)
+Similar to MLQ, but processes can move between queues. All processes start in the highest-priority queue. If a process uses its entire time quantum, it is demoted to the next lower-priority queue. An optional `boost_interval` can be configured to periodically promote all processes back to the highest-priority queue to prevent starvation.
+
+### Context-Switch Overhead
+A configurable `context_switch_cost` can be specified. This cost is incurred whenever the CPU switches execution from one process to a *different* process. It is recorded as a `CS` event in the Gantt chart and does not count as process execution time or idle time.

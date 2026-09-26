@@ -112,3 +112,41 @@ Matches the validation and error conditions of `/api/v1/simulate`.
 
 ### 2.5 `GET /api/v1/history`
 *(To be implemented in DB phase)*
+
+
+## Advanced Scheduling Configurations
+
+### MLQ Configuration
+When simulating MLQ, provide an `mlq_config` object in the simulation request:
+```json
+{
+  "algorithm": "MLQ",
+  "processes": [...],
+  "context_switch_cost": 1,
+  "mlq_config": {
+    "queues": [
+      {"id": 1, "priority": 1, "policy": "RR", "time_quantum": 4},
+      {"id": 2, "priority": 2, "policy": "FCFS"}
+    ],
+    "process_assignments": {"P1": 1, "P2": 2},
+    "inter_queue_policy": "FIXED_PRIORITY"
+  }
+}
+```
+
+### MLFQ Configuration
+When simulating MLFQ, provide an `mlfq_config` object:
+```json
+{
+  "algorithm": "MLFQ",
+  "processes": [...],
+  "mlfq_config": {
+    "queues": [
+      {"id": 1, "priority": 1, "policy": "RR", "time_quantum": 4},
+      {"id": 2, "priority": 2, "policy": "RR", "time_quantum": 8},
+      {"id": 3, "priority": 3, "policy": "FCFS"}
+    ],
+    "boost_interval": 20
+  }
+}
+```

@@ -1,5 +1,6 @@
+
 from pydantic import BaseModel, Field, field_validator
-from typing import List, Optional
+from typing import List, Optional, Any, Dict
 
 class Process(BaseModel):
     id: str
@@ -11,6 +12,7 @@ class GanttEvent(BaseModel):
     process_id: str
     start_time: int
     end_time: int
+    queue_id: Optional[int] = None
 
 class ProcessMetrics(BaseModel):
     process_id: str
