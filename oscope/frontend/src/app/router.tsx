@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { Dashboard } from '../pages/Dashboard';
+import { CommandCenter } from '../pages/CommandCenter';
 import { Simulator } from '../pages/Simulator';
 import { Compare } from '../pages/Compare';
 import { History } from '../pages/History';
@@ -10,7 +10,7 @@ import { Deadlock } from '../pages/Deadlock';
 export function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<CommandCenter />} />
       <Route path="/simulator" element={<Simulator />} />
       <Route path="/compare" element={<Compare />} />
       <Route path="/history" element={<History />} />

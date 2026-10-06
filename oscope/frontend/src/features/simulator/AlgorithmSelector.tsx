@@ -1,6 +1,5 @@
-import React from 'react';
 import { useSimulatorStore } from '../../store/useSimulatorStore';
-import { QueueConfig } from '../../types';
+
 
 export function AlgorithmSelector() {
   const { 

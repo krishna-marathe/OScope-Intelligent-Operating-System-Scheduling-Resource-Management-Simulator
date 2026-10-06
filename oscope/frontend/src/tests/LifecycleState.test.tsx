@@ -1,4 +1,3 @@
-import { render, screen, waitFor } from '@testing-library/react';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 import { api } from '../services/api';

@@ -5,18 +5,19 @@ import { api } from '../services/api';
 
 vi.mock('../services/api', () => ({
   api: {
-    simulate: vi.fn()
+    simulate: vi.fn(),
+    listHistory: vi.fn().mockResolvedValue({ data: [] })
   }
 }));
 
 test('renders dashboard initially', () => {
   render(<App />);
-  expect(screen.getAllByText('Dashboard')[0]).toBeInTheDocument();
+  expect(screen.getAllByText('Command Center')[0]).toBeInTheDocument();
 });
 
 test('can navigate to simulator and add process', () => {
   render(<App />);
-  fireEvent.click(screen.getByText('Simulator'));
+  fireEvent.click(screen.getByText('CPU & I/O'));
   expect(screen.getByText('Workload')).toBeInTheDocument();
   
   fireEvent.change(screen.getByTestId('input-id'), { target: { value: 'P1' } });
@@ -28,7 +29,7 @@ test('can navigate to simulator and add process', () => {
 
 test('can select RR and see time quantum', () => {
   render(<App />);
-  fireEvent.click(screen.getByText('Simulator'));
+  fireEvent.click(screen.getByText('CPU & I/O'));
   
   expect(screen.queryByTestId('tq-input')).not.toBeInTheDocument();
   
@@ -54,7 +55,7 @@ test('simulates and renders result', async () => {
   (api.simulate as any).mockResolvedValueOnce(mockResult);
   
   render(<App />);
-  fireEvent.click(screen.getByText('Simulator'));
+  fireEvent.click(screen.getByText('CPU & I/O'));
   
   fireEvent.change(screen.getByTestId('input-id'), { target: { value: 'P1' } });
   fireEvent.change(screen.getByTestId('input-burst'), { target: { value: '5' } });

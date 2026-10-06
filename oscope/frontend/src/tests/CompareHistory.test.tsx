@@ -19,8 +19,8 @@ beforeEach(() => {
     processes: [],
     timeQuantum: 2,
     contextSwitchCost: 0,
-    mlqConfig: null,
-    mlfqConfig: null,
+    mlqConfig: undefined,
+    mlfqConfig: undefined,
   });
   vi.clearAllMocks();
 });

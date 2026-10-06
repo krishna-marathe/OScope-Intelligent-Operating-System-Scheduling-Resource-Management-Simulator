@@ -54,7 +54,6 @@ describe('Phase 8B.3 GanttChart Visualization', () => {
     expect(screen.getByText('CPU Timeline')).toBeInTheDocument();
     expect(screen.getByText('I/O Timeline')).toBeInTheDocument();
     
-    const p1 = screen.getByTestId('gantt-event-CPU-P1');
     const p2io = screen.getByTestId('gantt-event-IO-P2');
     
     // Both are present, P2 is an IO event spanning 2-7

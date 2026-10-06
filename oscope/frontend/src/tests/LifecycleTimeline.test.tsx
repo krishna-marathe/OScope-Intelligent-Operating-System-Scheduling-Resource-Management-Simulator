@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { expect, test, vi, beforeEach } from 'vitest';
+import { expect, test, beforeEach } from 'vitest';
 import { LifecycleTimeline } from '../features/simulator/LifecycleTimeline';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { AlgorithmSelector } from '../features/simulator/AlgorithmSelector';
 import { Compare } from '../pages/Compare';

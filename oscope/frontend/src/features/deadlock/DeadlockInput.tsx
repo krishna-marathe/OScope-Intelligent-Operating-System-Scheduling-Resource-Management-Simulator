@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDeadlockStore } from '../../store/useDeadlockStore';
 import { api } from '../../services/api';
 
 export function DeadlockInput() {
   const {
-    processCount, resourceCount, available, allocation, maximum, resourceRequest,
-    setProcessCount, setResourceCount, setAvailable, setAllocation, setMaximum, setResourceRequest,
+    processCount, resourceCount, available, allocation, maximum,
+    setProcessCount, setResourceCount, setAvailable, setAllocation, setMaximum,
     setResult, setLoading, setError, loading, error
   } = useDeadlockStore();
 
