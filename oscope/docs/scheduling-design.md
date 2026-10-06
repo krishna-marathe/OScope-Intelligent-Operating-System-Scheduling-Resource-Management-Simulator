@@ -24,9 +24,9 @@ Instead of calculating metrics individually in each algorithm, a central metrics
 
 ## 3. Data Models (Pydantic)
 
-- **Process:** `id`, `arrival_time`, `burst_time`, `priority`.
-- **GanttEvent:** `process_id`, `start_time`, `end_time`.
-- **ProcessMetrics:** `completion_time`, `turnaround_time`, `waiting_time`, `response_time`.
+- **Process:** `id`, `arrival_time`, `burst_time`, `priority`, `burst_sequence`.
+- **GanttEvent:** `process_id`, `start_time`, `end_time`, `event_type`.
+- **ProcessMetrics:** `completion_time`, `turnaround_time`, `waiting_time`, `response_time`, `io_time`, `blocked_time`.
 - **SimulationResult:** Combines a `List[GanttEvent]` and overall `metrics`.
 
 ## 4. Supported Algorithms (Initial)
@@ -55,3 +55,7 @@ Similar to MLQ, but processes can move between queues. All processes start in th
 
 ### Context-Switch Overhead
 A configurable `context_switch_cost` can be specified. This cost is incurred whenever the CPU switches execution from one process to a *different* process. It is recorded as a `CS` event in the Gantt chart and does not count as process execution time or idle time.
+
+### UI Integration and Validation Rules
+- **MLQ Validation**: When the MLQ algorithm is selected for comparison or simulation, the system strictly validates that every active process is explicitly assigned to a valid queue. If assignments are missing, the UI proactively blocks submission and displays an actionable error detailing which process IDs are unassigned.
+- **Comparison Metrics**: Context switch overhead and counts are derived directly from Gantt events (CS). For consistency with older algorithms, if a history record lacks CS events, these metrics are safely omitted rather than breaking or presenting invalid data.

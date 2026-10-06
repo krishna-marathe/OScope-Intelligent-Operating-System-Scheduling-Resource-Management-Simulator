@@ -26,7 +26,28 @@ export function AlgorithmSelector() {
         <label className="block mb-1">Algorithm</label>
         <select 
           value={algorithm} 
-          onChange={e => setAlgorithm(e.target.value)}
+          onChange={e => {
+            const val = e.target.value;
+            setAlgorithm(val);
+            if (val === 'MLQ' && !mlqConfig) {
+              setMlqConfig({
+                queues: [
+                  { id: 1, priority: 1, policy: 'RR', time_quantum: 2 },
+                  { id: 2, priority: 2, policy: 'FCFS' }
+                ],
+                process_assignments: {},
+                inter_queue_policy: 'FIXED_PRIORITY'
+              });
+            } else if (val === 'MLFQ' && !mlfqConfig) {
+              setMlfqConfig({
+                queues: [
+                  { id: 1, priority: 1, policy: 'RR', time_quantum: 2 },
+                  { id: 2, priority: 2, policy: 'RR', time_quantum: 4 },
+                  { id: 3, priority: 3, policy: 'FCFS' }
+                ]
+              });
+            }
+          }}
           className="border p-2 w-full rounded"
           data-testid="algo-select"
         >

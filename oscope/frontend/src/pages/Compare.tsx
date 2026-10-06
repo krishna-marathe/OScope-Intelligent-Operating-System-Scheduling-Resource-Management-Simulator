@@ -23,6 +23,19 @@ export function Compare() {
       setError('Workload is empty. Go to Simulator to add processes.');
       return;
     }
+
+    if (selectedAlgos.includes('MLQ')) {
+      if (!mlqConfig || !mlqConfig.queues || mlqConfig.queues.length === 0) {
+        setError('MLQ configuration is missing or incomplete.');
+        return;
+      }
+      const unassignedProcesses = processes.filter(p => mlqConfig.process_assignments[p.id] === undefined);
+      if (unassignedProcesses.length > 0) {
+        setError(`MLQ configuration missing queue assignments for processes: ${unassignedProcesses.map(p => p.id).join(', ')}`);
+        return;
+      }
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -75,10 +88,21 @@ export function Compare() {
                 <th className="p-3">Avg Response</th>
                 <th className="p-3">CPU Util (%)</th>
                 <th className="p-3">Throughput</th>
+                <th className="p-3">CS Count</th>
+                <th className="p-3">CS Time</th>
               </tr>
             </thead>
             <tbody>
-              {Object.entries(results).map(([alg, res]) => (
+              {Object.entries(results).map(([alg, res]) => {
+                let csCount = 0;
+                let csTime = 0;
+                res.gantt_chart.forEach(ev => {
+                  if (ev.process_id === 'CS') {
+                    csCount++;
+                    csTime += (ev.end_time - ev.start_time);
+                  }
+                });
+                return (
                 <tr key={alg} className="border-b">
                   <td className="p-3 font-bold">{alg}</td>
                   <td className="p-3">{res.metrics.average_waiting_time.toFixed(2)}</td>
@@ -86,8 +110,11 @@ export function Compare() {
                   <td className="p-3">{res.metrics.average_response_time.toFixed(2)}</td>
                   <td className="p-3">{res.metrics.cpu_utilization.toFixed(1)}</td>
                   <td className="p-3">{res.metrics.throughput.toFixed(3)}</td>
+                  <td className="p-3">{csCount > 0 ? csCount : '-'}</td>
+                  <td className="p-3">{csTime > 0 ? csTime : '-'}</td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>

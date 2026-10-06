@@ -8,8 +8,9 @@ All endpoints accept processes in the following format:
 {
   "id": "string",
   "arrival_time": "integer (>= 0)",
-  "burst_time": "integer (> 0)",
-  "priority": "integer (optional, default 0)"
+  "burst_time": "integer (> 0, ignored if sequence is provided)",
+  "priority": "integer (optional, default 0)",
+  "burst_sequence": "array of int (optional, odd length, begins/ends with CPU, alternating I/O)"
 }
 ```
 *Validation:* 
@@ -23,9 +24,10 @@ Algorithms return consistent Gantt events and metrics:
 {
   "gantt_chart": [
     {
-      "process_id": "string (or 'IDLE')",
+      "process_id": "string (or 'IDLE', 'CS')",
       "start_time": "integer",
-      "end_time": "integer"
+      "end_time": "integer",
+      "event_type": "string ('CPU', 'IO', 'IDLE', 'CS')"
     }
   ],
   "metrics": {
@@ -35,14 +37,18 @@ Algorithms return consistent Gantt events and metrics:
         "completion_time": "integer",
         "turnaround_time": "integer",
         "waiting_time": "integer",
-        "response_time": "integer"
+        "response_time": "integer",
+        "io_time": "integer",
+        "blocked_time": "integer"
       }
     ],
     "average_turnaround_time": "float",
     "average_waiting_time": "float",
     "average_response_time": "float",
     "cpu_utilization": "float",
-    "throughput": "float"
+    "throughput": "float",
+    "io_utilization": "float",
+    "total_makespan": "integer"
   }
 }
 ```

@@ -25,6 +25,7 @@ export interface Process {
   arrival_time: number;
   burst_time: number;
   priority?: number;
+  burst_sequence?: number[];
 }
 
 export interface GanttEvent {
@@ -32,6 +33,7 @@ export interface GanttEvent {
   process_id: string;
   start_time: number;
   end_time: number;
+  event_type?: string;
 }
 
 export interface ProcessMetrics {
@@ -40,6 +42,8 @@ export interface ProcessMetrics {
   turnaround_time: number;
   waiting_time: number;
   response_time: number;
+  io_time?: number;
+  blocked_time?: number;
 }
 
 export interface SimulationMetrics {
@@ -49,6 +53,8 @@ export interface SimulationMetrics {
   average_response_time: number;
   cpu_utilization: number;
   throughput: number;
+  io_utilization?: number;
+  total_makespan?: number;
 }
 
 export interface SimulationResult {
