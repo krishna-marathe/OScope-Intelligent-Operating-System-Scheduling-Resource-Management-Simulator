@@ -6,7 +6,7 @@ export function PlaybackControls() {
   const { result, currentTime, isPlaying, playbackSpeed, setCurrentTime, setIsPlaying, setPlaybackSpeed, resetPlayback } = useSimulatorStore();
   const timerRef = useRef<number | null>(null);
 
-  const maxTime = result?.gantt_chart.length ? result.gantt_chart[result.gantt_chart.length - 1].end_time : 0;
+  const maxTime = result?.gantt_chart.length ? Math.max(...result.gantt_chart.map(e => e.end_time)) : 0;
   
   const getEventBoundaries = () => {
     if (!result) return [0];

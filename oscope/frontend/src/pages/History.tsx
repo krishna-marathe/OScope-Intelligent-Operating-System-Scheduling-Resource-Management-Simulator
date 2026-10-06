@@ -59,7 +59,10 @@ export function History() {
                 <li key={exp.id} className="p-3 border rounded flex justify-between items-center hover:bg-slate-50">
                   <div>
                     <p className="font-bold">{exp.name}</p>
-                    <p className="text-xs text-slate-500">{exp.algorithm} | {new Date(exp.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-slate-500">
+                      {exp.algorithm} | {new Date(exp.created_at).toLocaleString()}
+                      {exp.processes?.some(p => p.burst_sequence && p.burst_sequence.length > 0) && ' | CPU/IO Workload'}
+                    </p>
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => handleOpen(exp.id)} className="text-blue-600 text-sm">Open</button>
@@ -80,20 +83,28 @@ export function History() {
             <ul className="text-sm space-y-1">
               <li>Avg Wait: {selectedExp.simulation_result.metrics.average_waiting_time.toFixed(2)}</li>
               <li>Avg TAT: {selectedExp.simulation_result.metrics.average_turnaround_time.toFixed(2)}</li>
-              <li>Util: {selectedExp.simulation_result.metrics.cpu_utilization.toFixed(1)}%</li>
+              <li>CPU Util: {selectedExp.simulation_result.metrics.cpu_utilization.toFixed(1)}%</li>
+              {selectedExp.simulation_result.metrics.io_utilization !== undefined && (
+                <li>I/O Util: {selectedExp.simulation_result.metrics.io_utilization.toFixed(1)}%</li>
+              )}
+              {selectedExp.simulation_result.metrics.total_makespan !== undefined && (
+                <li>Total Makespan: {selectedExp.simulation_result.metrics.total_makespan.toFixed(1)}</li>
+              )}
             </ul>
             <h4 className="font-semibold mt-4">Timeline</h4>
             <div className="flex gap-1 overflow-x-auto pb-2">
-              {selectedExp.simulation_result.gantt_chart.map((ev, idx) => (
-                <div key={idx} className="flex flex-col items-center min-w-[40px]">
-                  <div className="w-full py-1 text-center text-white text-[10px] rounded bg-slate-700">
+              {selectedExp.simulation_result.gantt_chart.map((ev, idx) => {
+                const type = ev.event_type || (ev.process_id === 'IDLE' ? 'IDLE' : ev.process_id === 'CS' ? 'CS' : 'CPU');
+                return (
+                <div key={idx} className="flex flex-col items-center min-w-[40px]" title={`${ev.process_id} [${type}]`}>
+                  <div className={`w-full py-1 text-center text-white text-[10px] rounded ${type === 'IO' ? 'bg-orange-600' : type === 'CS' ? 'bg-red-600' : type === 'IDLE' ? 'bg-slate-300 text-slate-800' : 'bg-slate-700'}`}>
                     {ev.process_id}
                   </div>
                   <div className="text-[10px] mt-1 text-slate-500">
                     {ev.start_time}-{ev.end_time}
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
         )}

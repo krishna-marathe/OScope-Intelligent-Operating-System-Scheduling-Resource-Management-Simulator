@@ -8,7 +8,7 @@ export function SimulationMetricsPanel() {
   let csCount = 0;
   let csTime = 0;
   result.gantt_chart.forEach(ev => {
-    if (ev.process_id === 'CS') {
+    if (ev.process_id === 'CS' || ev.event_type === 'CS') {
       csCount++;
       csTime += (ev.end_time - ev.start_time);
     }
@@ -23,6 +23,10 @@ export function SimulationMetricsPanel() {
         <MetricCard label="Avg Response" value={result.metrics.average_response_time.toFixed(2)} testId="metric-art" />
         <MetricCard label="CPU Util (%)" value={result.metrics.cpu_utilization.toFixed(1)} testId="metric-util" />
         <MetricCard label="Throughput" value={result.metrics.throughput.toFixed(3)} testId="metric-throughput" />
+        
+        {result.metrics.io_utilization !== undefined && <MetricCard label="I/O Util (%)" value={result.metrics.io_utilization.toFixed(1)} testId="metric-io-util" />}
+        {result.metrics.total_makespan !== undefined && <MetricCard label="Total Makespan" value={result.metrics.total_makespan.toFixed(1)} testId="metric-makespan" />}
+        
         {(csCount > 0) && <MetricCard label="CS Count" value={csCount.toString()} testId="metric-cscount" />}
         {(csTime > 0) && <MetricCard label="CS Time" value={csTime.toString()} testId="metric-cstime" />}
       </div>

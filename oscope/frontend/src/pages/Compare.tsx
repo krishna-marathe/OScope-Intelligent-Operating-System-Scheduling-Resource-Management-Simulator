@@ -24,6 +24,15 @@ export function Compare() {
       return;
     }
 
+    const hasIO = processes.some(p => p.burst_sequence && p.burst_sequence.length > 0);
+
+    if (selectedAlgos.includes('MLQ') || selectedAlgos.includes('MLFQ')) {
+      if (hasIO) {
+        setError('CPU/I/O burst workloads are not supported for MLQ or MLFQ.');
+        return;
+      }
+    }
+
     if (selectedAlgos.includes('MLQ')) {
       if (!mlqConfig || !mlqConfig.queues || mlqConfig.queues.length === 0) {
         setError('MLQ configuration is missing or incomplete.');
@@ -88,6 +97,8 @@ export function Compare() {
                 <th className="p-3">Avg Response</th>
                 <th className="p-3">CPU Util (%)</th>
                 <th className="p-3">Throughput</th>
+                <th className="p-3">I/O Util (%)</th>
+                <th className="p-3">Makespan</th>
                 <th className="p-3">CS Count</th>
                 <th className="p-3">CS Time</th>
               </tr>
@@ -110,6 +121,8 @@ export function Compare() {
                   <td className="p-3">{res.metrics.average_response_time.toFixed(2)}</td>
                   <td className="p-3">{res.metrics.cpu_utilization.toFixed(1)}</td>
                   <td className="p-3">{res.metrics.throughput.toFixed(3)}</td>
+                  <td className="p-3">{res.metrics.io_utilization !== undefined ? res.metrics.io_utilization.toFixed(1) : '-'}</td>
+                  <td className="p-3">{res.metrics.total_makespan !== undefined ? res.metrics.total_makespan.toFixed(1) : '-'}</td>
                   <td className="p-3">{csCount > 0 ? csCount : '-'}</td>
                   <td className="p-3">{csTime > 0 ? csTime : '-'}</td>
                 </tr>
