@@ -4,11 +4,15 @@ import { ResultsView } from '../features/simulator/ResultsView';
 import { RecommendPanel } from '../features/simulator/RecommendPanel';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 import { api } from '../services/api';
+import { SimulationWorkspace } from '../features/simulation/SimulationWorkspace';
+import { SimulationViewport } from '../features/simulation/SimulationViewport';
+import { Panel } from '../components/ui/Panel';
+import { ActionButton } from '../components/ui/ActionButton';
 
 export function Simulator() {
   const { 
     processes, algorithm, timeQuantum, contextSwitchCost, mlqConfig, mlfqConfig, 
-    setResult, setLoading, setError, loading, error 
+    setResult, setLoading, setError, loading, error, result
   } = useSimulatorStore();
 
   const handleSimulate = async () => {
@@ -31,34 +35,65 @@ export function Simulator() {
     }
   };
 
+  const handleReset = () => {
+    setResult(null);
+    setError(null);
+  };
+
+  const configPanel = (
+    <>
+      <Panel title="ALGORITHM CONFIGURATION">
+        <AlgorithmSelector />
+      </Panel>
+      
+      <Panel title="WORKLOAD DEFINITION">
+        <WorkloadEditor />
+      </Panel>
+      
+      <Panel>
+        <ActionButton 
+          variant="primary"
+          testId="simulate-btn"
+          onClick={handleSimulate}
+          disabled={processes.length === 0 || loading}
+          className="w-full py-3 text-base"
+        >
+          {loading ? 'Simulating...' : 'Run Simulation'}
+        </ActionButton>
+        {error && <div className="mt-4 text-sm font-semibold text-rose-600 bg-rose-50 p-3 rounded" data-testid="error-msg">{error}</div>}
+      </Panel>
+    </>
+  );
+
+  const visualizationPanel = (
+    <SimulationViewport 
+      title="CPU & I/O GANTT CHART" 
+      status={result ? 'COMPLETED' : 'IDLE'}
+    >
+      <ResultsView />
+    </SimulationViewport>
+  );
+
+  const actions = (
+    <ActionButton variant="ghost" onClick={handleReset} disabled={!result && processes.length === 0}>
+      Reset
+    </ActionButton>
+  );
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">Workload</h3>
-          <WorkloadEditor />
-        </div>
-        <div className="flex flex-col gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-bold mb-4">Configuration</h3>
-            <AlgorithmSelector />
-            <button 
-              data-testid="simulate-btn"
-              onClick={handleSimulate}
-              disabled={processes.length === 0 || loading}
-              className="mt-4 w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
-            >
-              {loading ? 'Simulating...' : 'Simulate'}
-            </button>
-            {error && <div className="mt-4 text-red-600" data-testid="error-msg">{error}</div>}
-          </div>
-        </div>
-      </div>
-      <RecommendPanel />
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-bold mb-4">Results</h3>
-        <ResultsView />
-      </div>
+      <SimulationWorkspace 
+        title="CPU Scheduling Laboratory"
+        description="Design process workloads, select scheduling policies, and evaluate execution performance."
+        actions={actions}
+        configPanel={configPanel}
+        visualizationPanel={
+          <>
+            <RecommendPanel />
+            {visualizationPanel}
+          </>
+        }
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { DiskSimulator } from '../features/disk/DiskSimulator';
 import { useDiskStore } from '../store/useDiskStore';
@@ -26,16 +27,16 @@ beforeEach(() => {
 });
 
 test('Renders empty state properly', () => {
-  render(<DiskSimulator />);
-  expect(screen.getByText('Disk Scheduling Simulator')).toBeDefined();
-  expect(screen.getByText('Disk Scheduling Configuration')).toBeDefined();
+  render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
+  expect(screen.getByText('Disk Scheduling Laboratory')).toBeDefined();
+  expect(screen.getByText('DISK CONFIGURATION')).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
   expect(screen.queryByText('Head Movement Visualization')).toBeNull();
 });
 
 test('Validation: Empty sequence', async () => {
   useDiskStore.setState({ requestQueue: '' });
-  render(<DiskSimulator />);
+  render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('disk-simulate-btn'));
   
@@ -46,7 +47,7 @@ test('Validation: Empty sequence', async () => {
 
 test('Validation: Negative frames', async () => {
   useDiskStore.setState({ requestQueue: '-1, 2' });
-  render(<DiskSimulator />);
+  render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('disk-simulate-btn'));
   
@@ -72,7 +73,7 @@ test('Successful simulation sets result and renders metrics', async () => {
 
   vi.mocked(api.simulateDisk).mockResolvedValueOnce({ data: mockResult } as any);
 
-  render(<DiskSimulator />);
+  render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('disk-simulate-btn'));
   
@@ -95,7 +96,7 @@ test('Successful simulation sets result and renders metrics', async () => {
 });
 
 test('Algorithm selections update state', () => {
-  render(<DiskSimulator />);
+  render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
   const select = screen.getByTestId('disk-algo-select');
   
   fireEvent.change(select, { target: { value: 'SSTF' } });
@@ -114,7 +115,7 @@ test('API error sets error state', async () => {
     response: { data: { detail: 'Backend failed' } }
   });
 
-  render(<DiskSimulator />);
+  render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
   fireEvent.click(screen.getByTestId('disk-simulate-btn'));
   
   await waitFor(() => {

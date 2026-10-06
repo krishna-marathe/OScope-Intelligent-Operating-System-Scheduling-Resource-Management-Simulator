@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { DeadlockSimulator } from '../features/deadlock/DeadlockSimulator';
 import { useDeadlockStore } from '../store/useDeadlockStore';
@@ -27,15 +28,15 @@ beforeEach(() => {
 });
 
 test('Renders empty state properly', () => {
-  render(<DeadlockSimulator />);
-  expect(screen.getByText('Deadlock & Resource Allocation')).toBeDefined();
-  expect(screen.getByText('Deadlock Configuration')).toBeDefined();
+  render(<MemoryRouter><DeadlockSimulator /></MemoryRouter>);
+  expect(screen.getByText('Deadlock & Resource Laboratory')).toBeDefined();
+  expect(screen.getByText('DEADLOCK CONFIGURATION')).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
   expect(screen.queryByText("Banker's Safety Execution")).toBeNull();
 });
 
 test('Process count change updates matrices', () => {
-  render(<DeadlockSimulator />);
+  render(<MemoryRouter><DeadlockSimulator /></MemoryRouter>);
   
   const input = screen.getByTestId('process-count');
   fireEvent.change(input, { target: { value: '4' } });
@@ -64,7 +65,7 @@ test('Successful simulation sets result and renders visualization', async () => 
 
   vi.mocked(api.simulateDeadlock).mockResolvedValueOnce({ data: mockResult } as any);
 
-  render(<DeadlockSimulator />);
+  render(<MemoryRouter><DeadlockSimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('deadlock-simulate-btn'));
   
@@ -94,7 +95,7 @@ test('Resource Request enabled shows inputs and approves', async () => {
 
   vi.mocked(api.simulateDeadlock).mockResolvedValueOnce({ data: mockResult } as any);
 
-  render(<DeadlockSimulator />);
+  render(<MemoryRouter><DeadlockSimulator /></MemoryRouter>);
   
   const toggle = screen.getByTestId('req-toggle');
   fireEvent.click(toggle);
@@ -113,7 +114,7 @@ test('API error sets error state', async () => {
     response: { data: { detail: 'Backend failed' } }
   });
 
-  render(<DeadlockSimulator />);
+  render(<MemoryRouter><DeadlockSimulator /></MemoryRouter>);
   fireEvent.click(screen.getByTestId('deadlock-simulate-btn'));
   
   await waitFor(() => {

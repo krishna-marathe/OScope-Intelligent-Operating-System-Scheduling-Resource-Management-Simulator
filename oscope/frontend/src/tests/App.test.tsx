@@ -17,8 +17,8 @@ test('renders dashboard initially', () => {
 
 test('can navigate to simulator and add process', () => {
   render(<App />);
-  fireEvent.click(screen.getByText('CPU & I/O'));
-  expect(screen.getByText('Workload')).toBeInTheDocument();
+  fireEvent.click(screen.getAllByText('CPU & I/O')[0]);
+  expect(screen.getByText('WORKLOAD DEFINITION')).toBeInTheDocument();
   
   fireEvent.change(screen.getByTestId('input-id'), { target: { value: 'P1' } });
   fireEvent.change(screen.getByTestId('input-burst'), { target: { value: '5' } });
@@ -29,7 +29,7 @@ test('can navigate to simulator and add process', () => {
 
 test('can select RR and see time quantum', () => {
   render(<App />);
-  fireEvent.click(screen.getByText('CPU & I/O'));
+  fireEvent.click(screen.getAllByText('CPU & I/O')[0]);
   
   expect(screen.queryByTestId('tq-input')).not.toBeInTheDocument();
   
@@ -55,7 +55,7 @@ test('simulates and renders result', async () => {
   (api.simulate as any).mockResolvedValueOnce(mockResult);
   
   render(<App />);
-  fireEvent.click(screen.getByText('CPU & I/O'));
+  fireEvent.click(screen.getAllByText('CPU & I/O')[0]);
   
   fireEvent.change(screen.getByTestId('input-id'), { target: { value: 'P1' } });
   fireEvent.change(screen.getByTestId('input-burst'), { target: { value: '5' } });

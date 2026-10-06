@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { MemorySimulator } from '../features/memory/MemorySimulator';
 import { useMemoryStore } from '../store/useMemoryStore';
@@ -24,16 +25,16 @@ beforeEach(() => {
 });
 
 test('Renders empty state properly', () => {
-  render(<MemorySimulator />);
-  expect(screen.getByText('Memory Management Simulator')).toBeDefined();
-  expect(screen.getByText('Memory Configuration')).toBeDefined();
+  render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
+  expect(screen.getByText('Memory Management Laboratory')).toBeDefined();
+  expect(screen.getByText('MEMORY CONFIGURATION')).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
   expect(screen.queryByText('Page Replacement Visualization')).toBeNull();
 });
 
 test('Validation: Empty sequence', async () => {
   useMemoryStore.setState({ referenceSequence: '' });
-  render(<MemorySimulator />);
+  render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('simulate-btn'));
   
@@ -44,7 +45,7 @@ test('Validation: Empty sequence', async () => {
 
 test('Validation: Negative frames', async () => {
   useMemoryStore.setState({ frameCount: -1 });
-  render(<MemorySimulator />);
+  render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('simulate-btn'));
   
@@ -72,7 +73,7 @@ test('Successful simulation sets result and renders metrics', async () => {
 
   vi.mocked(api.simulateMemory).mockResolvedValueOnce({ data: mockResult } as any);
 
-  render(<MemorySimulator />);
+  render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
   
   fireEvent.click(screen.getByTestId('simulate-btn'));
   
@@ -96,7 +97,7 @@ test('Successful simulation sets result and renders metrics', async () => {
 });
 
 test('Algorithm selections update state', () => {
-  render(<MemorySimulator />);
+  render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
   const select = screen.getByTestId('algo-select');
   
   fireEvent.change(select, { target: { value: 'LRU' } });
@@ -111,7 +112,7 @@ test('API error sets error state', async () => {
     response: { data: { detail: 'Backend failed' } }
   });
 
-  render(<MemorySimulator />);
+  render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
   fireEvent.click(screen.getByTestId('simulate-btn'));
   
   await waitFor(() => {
