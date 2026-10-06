@@ -3,6 +3,7 @@ import { PlaybackControls } from './PlaybackControls';
 import { GanttChart } from './GanttChart';
 import { ProcessStatusPanel } from './ProcessStatusPanel';
 import { SimulationMetricsPanel } from './SimulationMetricsPanel';
+import { LifecycleTimeline } from './LifecycleTimeline';
 import { useSimulatorStore } from '../../store/useSimulatorStore';
 import { api } from '../../services/api';
 
@@ -46,6 +47,7 @@ export function ResultsView() {
       <SimulationMetricsPanel />
       <PlaybackControls />
       <GanttChart />
+      <LifecycleTimeline />
       <ProcessStatusPanel />
     </div>
   );

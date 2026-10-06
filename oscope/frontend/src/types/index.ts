@@ -57,9 +57,19 @@ export interface SimulationMetrics {
   total_makespan?: number;
 }
 
+export interface LifecycleEvent {
+  process_id: string;
+  state: string;
+  start_time: number;
+  end_time: number;
+  duration: number;
+  transition_reason: string;
+}
+
 export interface SimulationResult {
   gantt_chart: GanttEvent[];
   metrics: SimulationMetrics;
+  lifecycles?: LifecycleEvent[];
 }
 
 export interface SimulationRequest {
@@ -76,6 +86,7 @@ export interface ExperimentSummary {
   name: string;
   algorithm: string;
   created_at: string;
+  processes?: Process[];
 }
 
 export interface ExperimentDetails extends ExperimentSummary {
@@ -85,4 +96,96 @@ export interface ExperimentDetails extends ExperimentSummary {
   mlfq_config?: MLFQConfig;
   processes: Process[];
   simulation_result: SimulationResult;
+}
+
+export interface MemorySimulationRequest {
+  reference_sequence: number[];
+  frame_count: number;
+  algorithm: string;
+}
+
+export interface PageReferenceStep {
+  reference: number;
+  is_hit: boolean;
+  replaced_page: number | null;
+  frames: (number | null)[];
+}
+
+export interface MemorySimulationResult {
+  algorithm: string;
+  reference_sequence: number[];
+  frame_count: number;
+  steps: PageReferenceStep[];
+  page_faults: number;
+  page_hits: number;
+  hit_ratio: number;
+  fault_ratio: number;
+  total_references: number;
+}
+
+export interface DiskSimulationRequest {
+  request_queue: number[];
+  initial_head_position: number;
+  disk_size: number;
+  algorithm: string;
+  direction?: "LEFT" | "RIGHT";
+}
+
+export interface DiskMovementStep {
+  start_cylinder: number;
+  end_cylinder: number;
+  movement: number;
+}
+
+export interface DiskSimulationResult {
+  algorithm: string;
+  initial_head_position: number;
+  request_queue: number[];
+  service_order: number[];
+  movement_steps: DiskMovementStep[];
+  total_head_movement: number;
+  average_head_movement: number;
+}
+
+export interface ResourceRequest {
+  process_id: number;
+  request: number[];
+}
+
+export interface DeadlockSimulationRequest {
+  process_count: number;
+  resource_count: number;
+  available: number[];
+  allocation: number[][];
+  maximum: number[][];
+  resource_request?: ResourceRequest;
+}
+
+export interface SafetyStep {
+  step_number: number;
+  process_id: number;
+  work_before: number[];
+  need: number[];
+  can_execute: boolean;
+  work_after: number[];
+  finish_status: boolean[];
+}
+
+export interface ProcessState {
+  process_id: number;
+  allocation: number[];
+  maximum: number[];
+  need: number[];
+  finished: boolean;
+}
+
+export interface DeadlockSimulationResult {
+  is_safe: boolean;
+  safe_sequence: number[];
+  available_after_simulation: number[];
+  need_matrix: number[][];
+  process_states: ProcessState[];
+  safety_steps: SafetyStep[];
+  request_approved?: boolean;
+  request_reason?: string;
 }

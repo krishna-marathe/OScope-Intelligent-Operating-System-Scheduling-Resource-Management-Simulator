@@ -1,5 +1,6 @@
+/// <reference types="vite/client" />
 import axios from 'axios';
-import { SimulationRequest, SimulationResult, ExperimentSummary, ExperimentDetails } from '../types';
+import { SimulationRequest, SimulationResult, ExperimentSummary, ExperimentDetails, MemorySimulationRequest, MemorySimulationResult, DiskSimulationRequest, DiskSimulationResult, DeadlockSimulationRequest, DeadlockSimulationResult } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
@@ -15,5 +16,8 @@ export const api = {
   listHistory: () => client.get<ExperimentSummary[]>('/history'),
   getHistory: (id: number) => client.get<ExperimentDetails>(`/history/${id}`),
   deleteHistory: (id: number) => client.delete(`/history/${id}`),
-  recommend: (req: any) => client.post('/recommend', req)
+  recommend: (req: any) => client.post('/recommend', req),
+  simulateMemory: (req: MemorySimulationRequest) => client.post<MemorySimulationResult>('/memory/simulate', req),
+  simulateDisk: (req: DiskSimulationRequest) => client.post<DiskSimulationResult>('/disk/simulate', req),
+  simulateDeadlock: (req: DeadlockSimulationRequest) => client.post<DeadlockSimulationResult>('/deadlock/simulate', req)
 };

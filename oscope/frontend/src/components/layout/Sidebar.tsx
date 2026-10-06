@@ -11,6 +11,9 @@ export function Sidebar() {
         <Link to="/simulator" className="block py-2 px-4 rounded hover:bg-slate-800">Simulator</Link>
         <Link to="/compare" className="block py-2 px-4 rounded hover:bg-slate-800">Compare</Link>
         <Link to="/history" className="block py-2 px-4 rounded hover:bg-slate-800">History</Link>
+        <Link to="/memory" className="block py-2 px-4 rounded hover:bg-slate-800">Memory</Link>
+        <Link to="/disk" className="block py-2 px-4 rounded hover:bg-slate-800">Disk</Link>
+        <Link to="/deadlock" className="block py-2 px-4 rounded hover:bg-slate-800">Deadlock</Link>
         <Link to="/about" className="block py-2 px-4 rounded hover:bg-slate-800">About</Link>
       </nav>
     </div>

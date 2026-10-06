@@ -20,6 +20,14 @@ class Process(BaseModel):
                 raise ValueError("All burst durations must be positive")
         return v
 
+class LifecycleEvent(BaseModel):
+    process_id: str
+    state: str
+    start_time: int
+    end_time: int
+    duration: int
+    transition_reason: str = ""
+
 class GanttEvent(BaseModel):
     process_id: str
     start_time: int
@@ -49,3 +57,4 @@ class SimulationMetrics(BaseModel):
 class SimulationResult(BaseModel):
     gantt_chart: List[GanttEvent]
     metrics: SimulationMetrics
+    lifecycles: Optional[List[LifecycleEvent]] = None

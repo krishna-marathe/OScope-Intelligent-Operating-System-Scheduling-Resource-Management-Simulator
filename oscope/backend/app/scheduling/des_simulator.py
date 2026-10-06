@@ -1,7 +1,7 @@
 from typing import List, Optional
 import heapq
 from collections import deque
-from app.models.schemas import Process, GanttEvent, SimulationResult
+from app.models.schemas import Process, GanttEvent, SimulationResult, LifecycleEvent
 from app.scheduling.metrics import ProcessMetrics, SimulationMetrics
 
 class SimProcess:
@@ -28,6 +28,24 @@ class SimProcess:
         self.io_wait_time = 0
         self.io_service_time = 0
         self.cpu_service_time = 0
+        
+        self.state = "NEW"
+        self.state_start = p.arrival_time
+        self.lifecycle: List[LifecycleEvent] = []
+
+    def transition(self, current_time: int, next_state: str, reason: str = ""):
+        if self.state == "NEW" and next_state != "NEW":
+            self.lifecycle.append(LifecycleEvent(
+                process_id=self.id, state="NEW", start_time=self.state_start, end_time=self.state_start, duration=0, transition_reason="Process arrived"
+            ))
+            
+        if current_time >= self.state_start and self.state != "NEW":
+            self.lifecycle.append(LifecycleEvent(
+                process_id=self.id, state=self.state, start_time=self.state_start, end_time=current_time, duration=current_time - self.state_start, transition_reason=reason
+            ))
+                
+        self.state = next_state
+        self.state_start = current_time
 
     def is_done(self):
         return self.burst_index >= len(self.bursts)
@@ -125,6 +143,7 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
                     break
                     
             if cpu_active.remaining_time > 0:
+                cpu_active.transition(current_time, "READY", "Preempted by higher priority process or quantum expiration")
                 add_to_ready_queue(cpu_active)
             cpu_active = None
 
@@ -152,6 +171,7 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
             sp = process_map[p_id]
             
             if ev_type == 1:
+                sp.transition(current_time, "READY", "Process entered ready queue")
                 add_to_ready_queue(sp)
                 if check_preemption(sp):
                     preempt_cpu()
@@ -161,10 +181,12 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
                     sp.burst_index += 1
                     if not sp.is_done():
                         sp.remaining_time = sp.bursts[sp.burst_index]
+                        sp.transition(current_time, "READY", "I/O burst completed")
                         add_to_ready_queue(sp)
                         if check_preemption(sp):
                             preempt_cpu()
                     else:
+                        sp.transition(current_time, "TERMINATED", "Execution completed after I/O")
                         sp.completion_time = current_time
                     schedule_io()
             elif ev_type == 3:
@@ -177,9 +199,11 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
                     if not sp.is_done():
                         sp.remaining_time = sp.bursts[sp.burst_index]
                         sp.io_queue_entry_time = current_time
+                        sp.transition(current_time, "BLOCKED", "Waiting for I/O")
                         io_queue.append(sp)
                         schedule_io()
                     else:
+                        sp.transition(current_time, "TERMINATED", "Execution completed")
                         sp.completion_time = current_time
             elif ev_type == 4:
                 if expected_cpu_event_time.get(p_id) == current_time and cpu_active == sp:
@@ -188,6 +212,7 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
                     sp.cpu_service_time += run_time
                     cpu_active = None
                     if sp.remaining_time > 0:
+                        sp.transition(current_time, "READY", "Time quantum expired")
                         add_to_ready_queue(sp)
 
         if not cpu_active and ready_queue:
@@ -210,6 +235,7 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
             if sp.first_response_time is None:
                 sp.first_response_time = current_time - sp.arrival_time
                 
+            sp.transition(current_time, "RUNNING", "Dispatched to CPU")
             cpu_active = sp
             cpu_quantum_start = current_time
             
@@ -281,4 +307,27 @@ def simulate_des(processes: List[Process], policy: str, **kwargs) -> SimulationR
         total_makespan=total_time
     )
 
-    return SimulationResult(gantt_chart=merged_chart, metrics=metrics)
+    all_lifecycles = []
+    for sp in sim_procs:
+        if sp.state != "TERMINATED":
+            sp.transition(current_time, "TERMINATED", "Simulation ended")
+            
+        sp.lifecycle.append(LifecycleEvent(
+            process_id=sp.id, state="TERMINATED", start_time=sp.completion_time, end_time=sp.completion_time, duration=0, transition_reason="Process terminated"
+        ))
+        
+        # Merge consecutive identical states just in case
+        merged_lc = []
+        for le in sp.lifecycle:
+            if not merged_lc:
+                merged_lc.append(le)
+            elif merged_lc[-1].state == le.state and merged_lc[-1].end_time == le.start_time:
+                merged_lc[-1].end_time = le.end_time
+                merged_lc[-1].duration += le.duration
+            else:
+                merged_lc.append(le)
+        all_lifecycles.extend(merged_lc)
+        
+    all_lifecycles.sort(key=lambda x: (x.process_id, x.start_time))
+
+    return SimulationResult(gantt_chart=merged_chart, metrics=metrics, lifecycles=all_lifecycles)

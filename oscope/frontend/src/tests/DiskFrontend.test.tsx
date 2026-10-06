@@ -1,0 +1,123 @@
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { expect, test, vi, beforeEach } from 'vitest';
+import { DiskSimulator } from '../features/disk/DiskSimulator';
+import { useDiskStore } from '../store/useDiskStore';
+import { api } from '../services/api';
+
+vi.mock('../services/api', () => ({
+  api: {
+    simulateDisk: vi.fn(),
+  },
+}));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  useDiskStore.setState({
+    requestQueue: '1, 2, 3',
+    initialHeadPosition: 0,
+    diskSize: 100,
+    algorithm: 'FCFS',
+    direction: 'RIGHT',
+    result: null,
+    loading: false,
+    error: null,
+    currentStep: 0,
+  });
+});
+
+test('Renders empty state properly', () => {
+  render(<DiskSimulator />);
+  expect(screen.getByText('Disk Scheduling Simulator')).toBeDefined();
+  expect(screen.getByText('Disk Scheduling Configuration')).toBeDefined();
+  expect(screen.queryByText('Metrics Summary')).toBeNull();
+  expect(screen.queryByText('Head Movement Visualization')).toBeNull();
+});
+
+test('Validation: Empty sequence', async () => {
+  useDiskStore.setState({ requestQueue: '' });
+  render(<DiskSimulator />);
+  
+  fireEvent.click(screen.getByTestId('disk-simulate-btn'));
+  
+  await waitFor(() => {
+    expect(screen.getByTestId('disk-error').textContent).toContain('cannot be empty');
+  });
+});
+
+test('Validation: Negative frames', async () => {
+  useDiskStore.setState({ requestQueue: '-1, 2' });
+  render(<DiskSimulator />);
+  
+  fireEvent.click(screen.getByTestId('disk-simulate-btn'));
+  
+  await waitFor(() => {
+    expect(screen.getByTestId('disk-error').textContent).toContain('non-negative');
+  });
+});
+
+test('Successful simulation sets result and renders metrics', async () => {
+  const mockResult = {
+    algorithm: 'FCFS',
+    initial_head_position: 0,
+    request_queue: [1, 2, 3],
+    service_order: [1, 2, 3],
+    movement_steps: [
+      { start_cylinder: 0, end_cylinder: 1, movement: 1 },
+      { start_cylinder: 1, end_cylinder: 2, movement: 1 },
+      { start_cylinder: 2, end_cylinder: 3, movement: 1 },
+    ],
+    total_head_movement: 3,
+    average_head_movement: 1
+  };
+
+  vi.mocked(api.simulateDisk).mockResolvedValueOnce({ data: mockResult } as any);
+
+  render(<DiskSimulator />);
+  
+  fireEvent.click(screen.getByTestId('disk-simulate-btn'));
+  
+  expect(screen.getByTestId('disk-simulate-btn').textContent).toBe('Simulating...');
+  
+  await waitFor(() => {
+    expect(screen.getByText('Metrics Summary')).toBeDefined();
+    expect(screen.getByText('Head Movement Visualization')).toBeDefined();
+  });
+  
+  // Check metrics rendering
+  expect(screen.getAllByText('3').length).toBeGreaterThan(0);
+  
+  // Check visualization rendering
+  const step0 = screen.getByTestId('disk-step-0');
+  expect(step0.textContent).toContain('▶ RIGHT');
+  
+  // Step controls
+  expect(screen.getByText('Step: 3 / 3')).toBeDefined();
+});
+
+test('Algorithm selections update state', () => {
+  render(<DiskSimulator />);
+  const select = screen.getByTestId('disk-algo-select');
+  
+  fireEvent.change(select, { target: { value: 'SSTF' } });
+  expect(useDiskStore.getState().algorithm).toBe('SSTF');
+  
+  fireEvent.change(select, { target: { value: 'SCAN' } });
+  expect(useDiskStore.getState().algorithm).toBe('SCAN');
+  
+  const dirSelect = screen.getByTestId('disk-dir-select');
+  fireEvent.change(dirSelect, { target: { value: 'LEFT' } });
+  expect(useDiskStore.getState().direction).toBe('LEFT');
+});
+
+test('API error sets error state', async () => {
+  vi.mocked(api.simulateDisk).mockRejectedValueOnce({
+    response: { data: { detail: 'Backend failed' } }
+  });
+
+  render(<DiskSimulator />);
+  fireEvent.click(screen.getByTestId('disk-simulate-btn'));
+  
+  await waitFor(() => {
+    expect(screen.getByTestId('disk-error').textContent).toBe('Backend failed');
+  });
+});
