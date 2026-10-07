@@ -34,7 +34,7 @@ test('Playback Play/Pause maxTime logic works with overlapping IO/CPU events', (
   render(<PlaybackControls />);
   
   // maxTime should be 8, not 7!
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0 / 8');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0.0 / 8.0');
 });
 
 test('Playback steps correctly over complex CPU/IO boundaries', () => {
@@ -53,16 +53,16 @@ test('Playback steps correctly over complex CPU/IO boundaries', () => {
   
   // Boundaries are: 0, 1, 4, 5
   fireEvent.click(screen.getByTestId('btn-step-forward'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 1 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 1.0 / 5.0');
   
   fireEvent.click(screen.getByTestId('btn-step-forward'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 4 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 4.0 / 5.0');
   
   fireEvent.click(screen.getByTestId('btn-step-forward'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 5 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 5.0 / 5.0');
 
   fireEvent.click(screen.getByTestId('btn-step-back'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 4 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 4.0 / 5.0');
 });
 
 test('GanttChart width updates dynamically for overlapping CPU/IO events', () => {

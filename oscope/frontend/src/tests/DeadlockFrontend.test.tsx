@@ -30,7 +30,7 @@ beforeEach(() => {
 test('Renders empty state properly', () => {
   render(<MemoryRouter><DeadlockSimulator /></MemoryRouter>);
   expect(screen.getByText('Deadlock & Resource Laboratory')).toBeDefined();
-  expect(screen.getByText('DEADLOCK CONFIGURATION')).toBeDefined();
+  expect(screen.getByText(/Deadlock Configuration/i)).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
   expect(screen.queryByText("Banker's Algorithm State Space")).toBeNull();
 });

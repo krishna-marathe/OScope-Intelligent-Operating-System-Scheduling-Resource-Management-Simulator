@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { ResultsView } from '../features/simulator/ResultsView';
+import { PlaybackControls } from '../features/simulator/PlaybackControls';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 
 beforeEach(() => {
@@ -36,9 +37,14 @@ afterEach(() => {
 });
 
 test('Playback Play/Pause toggles state and advances time', () => {
-  render(<ResultsView />);
+  render(
+    <>
+      <PlaybackControls />
+      <ResultsView />
+    </>
+  );
   
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0.0 / 5.0');
   
   // Click Play
   fireEvent.click(screen.getByTestId('btn-play-pause'));
@@ -47,7 +53,7 @@ test('Playback Play/Pause toggles state and advances time', () => {
     vi.advanceTimersByTime(2000); // 2 seconds = 2 time units at 1x speed
   });
   
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2.0 / 5.0');
   
   // Pause
   fireEvent.click(screen.getByTestId('btn-play-pause'));
@@ -56,29 +62,39 @@ test('Playback Play/Pause toggles state and advances time', () => {
     vi.advanceTimersByTime(2000); // Time shouldn't advance
   });
   
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2.0 / 5.0');
 });
 
 test('Reset returns time to 0', () => {
-  render(<ResultsView />);
+  render(
+    <>
+      <PlaybackControls />
+      <ResultsView />
+    </>
+  );
   useSimulatorStore.setState({ currentTime: 3 });
   
   fireEvent.click(screen.getByTestId('btn-reset'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0.0 / 5.0');
 });
 
 test('Step forward and backward moves to event boundaries', () => {
-  render(<ResultsView />);
+  render(
+    <>
+      <PlaybackControls />
+      <ResultsView />
+    </>
+  );
   // Boundaries are 0, 2, 3, 5
   
   fireEvent.click(screen.getByTestId('btn-step-forward'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2.0 / 5.0');
   
   fireEvent.click(screen.getByTestId('btn-step-forward'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 3 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 3.0 / 5.0');
   
   fireEvent.click(screen.getByTestId('btn-step-back'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2 / 5');
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 2.0 / 5.0');
 });
 
 test('Process status updates correctly based on time', () => {

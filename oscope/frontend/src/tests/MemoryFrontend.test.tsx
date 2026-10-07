@@ -27,7 +27,7 @@ beforeEach(() => {
 test('Renders empty state properly', () => {
   render(<MemoryRouter><MemorySimulator /></MemoryRouter>);
   expect(screen.getByText('Memory Management Laboratory')).toBeDefined();
-  expect(screen.getByText('MEMORY CONFIGURATION')).toBeDefined();
+  expect(screen.getByText(/Memory Configuration/i)).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
   expect(screen.queryByText('Memory Reference Timeline')).toBeNull();
 });

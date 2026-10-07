@@ -4,6 +4,7 @@ import { AlgorithmSelector } from '../features/simulator/AlgorithmSelector';
 import { Compare } from '../pages/Compare';
 import { GanttChart } from '../features/simulator/GanttChart';
 import { ResultsView } from '../features/simulator/ResultsView';
+import { PlaybackControls } from '../features/simulator/PlaybackControls';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 
 beforeEach(() => {
@@ -74,12 +75,17 @@ test('Playback through CS intervals', () => {
     playbackSpeed: 1
   });
 
-  render(<ResultsView />);
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0 / 5');
+  render(
+    <>
+      <PlaybackControls />
+      <ResultsView />
+    </>
+  );
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 0.0 / 5.0');
 
   fireEvent.click(screen.getByTestId('btn-step-forward'));
   fireEvent.click(screen.getByTestId('btn-step-forward'));
-  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 3 / 5'); // Moved through P1 and CS to start of P2
+  expect(screen.getByTestId('current-time-display')).toHaveTextContent('Time: 3.0 / 5.0'); // Moved through P1 and CS to start of P2
 
   vi.useRealTimers();
 });

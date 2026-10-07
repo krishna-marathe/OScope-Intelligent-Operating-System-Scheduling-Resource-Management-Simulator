@@ -131,6 +131,6 @@ describe('Phase 8B.2 Workload Editor CPU/IO Burst Sequence', () => {
     
     // Check table output
     const seq = screen.getByTestId('seq-P6');
-    expect(seq.textContent).toBe('CPU [5] → IO [3] → CPU [4]');
+    expect(seq.textContent).toBe('CPU 5I/O 3CPU 4');
   });
 });

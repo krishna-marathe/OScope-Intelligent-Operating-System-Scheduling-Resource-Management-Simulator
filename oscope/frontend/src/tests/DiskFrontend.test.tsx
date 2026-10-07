@@ -29,7 +29,7 @@ beforeEach(() => {
 test('Renders empty state properly', () => {
   render(<MemoryRouter><DiskSimulator /></MemoryRouter>);
   expect(screen.getByText('Disk Scheduling Laboratory')).toBeDefined();
-  expect(screen.getByText('DISK CONFIGURATION')).toBeDefined();
+  expect(screen.getByText(/Disk Configuration/i)).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
   expect(screen.queryByText('Disk Head Scheduling Map')).toBeNull();
 });
