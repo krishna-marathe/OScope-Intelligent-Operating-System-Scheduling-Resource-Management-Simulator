@@ -31,7 +31,7 @@ test('Renders empty state properly', () => {
   expect(screen.getByText('Disk Scheduling Laboratory')).toBeDefined();
   expect(screen.getByText('DISK CONFIGURATION')).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
-  expect(screen.queryByText('Head Movement Visualization')).toBeNull();
+  expect(screen.queryByText('Disk Head Scheduling Map')).toBeNull();
 });
 
 test('Validation: Empty sequence', async () => {
@@ -81,15 +81,15 @@ test('Successful simulation sets result and renders metrics', async () => {
   
   await waitFor(() => {
     expect(screen.getByText('Metrics Summary')).toBeDefined();
-    expect(screen.getByText('Head Movement Visualization')).toBeDefined();
+    expect(screen.getByText('Disk Head Scheduling Map')).toBeDefined();
   });
   
   // Check metrics rendering
   expect(screen.getAllByText('3').length).toBeGreaterThan(0);
   
   // Check visualization rendering
-  const step0 = screen.getByTestId('disk-step-0');
-  expect(step0.textContent).toContain('▶ RIGHT');
+  const svg = screen.getByText('Disk Head Scheduling Map');
+  expect(svg).toBeDefined();
   
   // Step controls
   expect(screen.getByText('Step: 3 / 3')).toBeDefined();

@@ -32,7 +32,7 @@ test('Renders empty state properly', () => {
   expect(screen.getByText('Deadlock & Resource Laboratory')).toBeDefined();
   expect(screen.getByText('DEADLOCK CONFIGURATION')).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
-  expect(screen.queryByText("Banker's Safety Execution")).toBeNull();
+  expect(screen.queryByText("Banker's Algorithm State Space")).toBeNull();
 });
 
 test('Process count change updates matrices', () => {
@@ -73,8 +73,8 @@ test('Successful simulation sets result and renders visualization', async () => 
   
   await waitFor(() => {
     expect(screen.getByText('Metrics Summary')).toBeDefined();
-    expect(screen.getByText("Banker's Safety Execution")).toBeDefined();
-    expect(screen.getByText('SYSTEM IS SAFE')).toBeDefined();
+    expect(screen.getByText("Banker's Algorithm State Space")).toBeDefined();
+    expect(screen.getByText(/System is in a Safe State/i)).toBeDefined();
   });
   
   // Step controls
@@ -88,7 +88,9 @@ test('Resource Request enabled shows inputs and approves', async () => {
     available_after_simulation: [3, 3],
     need_matrix: [],
     process_states: [],
-    safety_steps: [],
+    safety_steps: [
+      { step_number: 1, process_id: 0, work_before: [1, 1], need: [1, 1], can_execute: true, work_after: [1, 1], finish_status: [true, false, false] }
+    ],
     request_approved: true,
     request_reason: "Request granted. System remains in a SAFE state."
   };
@@ -105,7 +107,7 @@ test('Resource Request enabled shows inputs and approves', async () => {
   fireEvent.click(screen.getByTestId('deadlock-simulate-btn'));
   
   await waitFor(() => {
-    expect(screen.getByText(/APPROVED/)).toBeDefined();
+    expect(screen.getByText(/APPROVED:/)).toBeDefined();
   });
 });
 

@@ -29,6 +29,7 @@ export function DiskSimulator() {
       <SimulationViewport 
         title="HEAD MOVEMENT VISUALIZATION" 
         status={result ? 'COMPLETED' : 'IDLE'}
+        laboratoryType="DISK"
       >
         <DiskStepControls />
         <DiskVisualization />

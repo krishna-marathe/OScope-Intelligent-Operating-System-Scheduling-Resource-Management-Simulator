@@ -29,6 +29,7 @@ export function MemorySimulator() {
       <SimulationViewport 
         title="PAGE REPLACEMENT TIMELINE" 
         status={result ? 'COMPLETED' : 'IDLE'}
+        laboratoryType="MEMORY"
       >
         <MemoryStepControls />
         <MemoryVisualization />

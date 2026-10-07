@@ -50,8 +50,8 @@ test('Rendering process, IDLE, and CS Gantt events distinctly with queue labels'
 
   render(<GanttChart />);
   expect(screen.getByText('P1 (Q1)')).toBeInTheDocument();
-  expect(screen.getByText('CS')).toBeInTheDocument();
-  expect(screen.getByText('IDLE')).toBeInTheDocument();
+  expect(screen.getAllByText('CS').length).toBeGreaterThan(0);
+  expect(screen.getAllByText('IDLE').length).toBeGreaterThan(0);
   expect(screen.getByText('P2 (Q2)')).toBeInTheDocument();
 });
 

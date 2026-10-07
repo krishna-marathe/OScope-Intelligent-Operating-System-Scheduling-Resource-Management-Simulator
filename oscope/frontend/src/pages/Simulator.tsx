@@ -69,6 +69,7 @@ export function Simulator() {
     <SimulationViewport 
       title="CPU & I/O GANTT CHART" 
       status={result ? 'COMPLETED' : 'IDLE'}
+      laboratoryType="CPU"
     >
       <ResultsView />
     </SimulationViewport>

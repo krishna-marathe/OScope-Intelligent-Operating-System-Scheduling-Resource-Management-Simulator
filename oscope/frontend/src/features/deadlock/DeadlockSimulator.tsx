@@ -48,6 +48,7 @@ export function DeadlockSimulator() {
       <SimulationViewport 
         title="BANKER's ALGORITHM SAFETY EVALUATION" 
         status={result ? 'COMPLETED' : 'IDLE'}
+        laboratoryType="DEADLOCK"
       >
         <DeadlockStepControls />
         <DeadlockVisualization />

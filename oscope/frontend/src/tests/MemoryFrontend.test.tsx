@@ -29,7 +29,7 @@ test('Renders empty state properly', () => {
   expect(screen.getByText('Memory Management Laboratory')).toBeDefined();
   expect(screen.getByText('MEMORY CONFIGURATION')).toBeDefined();
   expect(screen.queryByText('Metrics Summary')).toBeNull();
-  expect(screen.queryByText('Page Replacement Visualization')).toBeNull();
+  expect(screen.queryByText('Memory Reference Timeline')).toBeNull();
 });
 
 test('Validation: Empty sequence', async () => {
@@ -81,7 +81,7 @@ test('Successful simulation sets result and renders metrics', async () => {
   
   await waitFor(() => {
     expect(screen.getByText('Metrics Summary')).toBeDefined();
-    expect(screen.getByText('Page Replacement Visualization')).toBeDefined();
+    expect(screen.getByText('Memory Reference Timeline')).toBeDefined();
   });
   
   // Check metrics rendering

@@ -51,8 +51,8 @@ describe('Phase 8B.3 GanttChart Visualization', () => {
     
     render(<GanttChart />);
     
-    expect(screen.getByText('CPU Timeline')).toBeInTheDocument();
-    expect(screen.getByText('I/O Timeline')).toBeInTheDocument();
+    expect(screen.getByText('CPU Core')).toBeInTheDocument();
+    expect(screen.getByText('I/O Device')).toBeInTheDocument();
     
     const p2io = screen.getByTestId('gantt-event-IO-P2');
     
