@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { PlaybackControls } from './PlaybackControls';
 import { GanttChart } from './GanttChart';
 import { ProcessStatusPanel } from './ProcessStatusPanel';
 import { SimulationMetricsPanel } from './SimulationMetricsPanel';
@@ -45,7 +44,6 @@ export function ResultsView() {
         </div>
       </div>
       <SimulationMetricsPanel />
-      <PlaybackControls />
       <GanttChart />
       <LifecycleTimeline />
       <ProcessStatusPanel />

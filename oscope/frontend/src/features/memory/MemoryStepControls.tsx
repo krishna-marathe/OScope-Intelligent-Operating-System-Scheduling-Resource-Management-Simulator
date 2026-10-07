@@ -1,4 +1,5 @@
 import { useMemoryStore } from '../../store/useMemoryStore';
+import { SceneControls } from '../visualization3d/engine/SceneControls';
 
 export function MemoryStepControls() {
   const { result, currentStep, setCurrentStep } = useMemoryStore();
@@ -39,8 +40,11 @@ export function MemoryStepControls() {
           Last ⏭
         </button>
       </div>
-      <div className="text-sm font-semibold">
-        Step: {currentStep} / {totalSteps}
+      <div className="flex items-center gap-4">
+        <div className="font-mono text-sm font-bold bg-white px-3 py-1.5 rounded border border-slate-200">
+          Step: {currentStep} / {totalSteps}
+        </div>
+        <SceneControls />
       </div>
     </div>
   );

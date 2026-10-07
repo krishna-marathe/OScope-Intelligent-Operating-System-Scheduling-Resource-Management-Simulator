@@ -2,6 +2,7 @@ import { WorkloadEditor } from '../features/simulator/WorkloadEditor';
 import { AlgorithmSelector } from '../features/simulator/AlgorithmSelector';
 import { ResultsView } from '../features/simulator/ResultsView';
 import { RecommendPanel } from '../features/simulator/RecommendPanel';
+import { PlaybackControls } from '../features/simulator/PlaybackControls';
 import { useSimulatorStore } from '../store/useSimulatorStore';
 import { api } from '../services/api';
 import { SimulationWorkspace } from '../features/simulation/SimulationWorkspace';
@@ -70,6 +71,7 @@ export function Simulator() {
       title="CPU & I/O GANTT CHART" 
       status={result ? 'COMPLETED' : 'IDLE'}
       laboratoryType="CPU"
+      toolbar={<PlaybackControls />}
     >
       <ResultsView />
     </SimulationViewport>

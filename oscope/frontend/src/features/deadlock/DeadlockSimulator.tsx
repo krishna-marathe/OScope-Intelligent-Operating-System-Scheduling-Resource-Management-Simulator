@@ -49,8 +49,8 @@ export function DeadlockSimulator() {
         title="BANKER's ALGORITHM SAFETY EVALUATION" 
         status={result ? 'COMPLETED' : 'IDLE'}
         laboratoryType="DEADLOCK"
+        toolbar={<DeadlockStepControls />}
       >
-        <DeadlockStepControls />
         <DeadlockVisualization />
       </SimulationViewport>
       <div className={result ? 'block' : 'hidden'}>

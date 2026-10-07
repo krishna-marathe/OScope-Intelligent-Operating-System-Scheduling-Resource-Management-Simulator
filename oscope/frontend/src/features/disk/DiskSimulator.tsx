@@ -30,8 +30,8 @@ export function DiskSimulator() {
         title="HEAD MOVEMENT VISUALIZATION" 
         status={result ? 'COMPLETED' : 'IDLE'}
         laboratoryType="DISK"
+        toolbar={<DiskStepControls />}
       >
-        <DiskStepControls />
         <DiskVisualization />
       </SimulationViewport>
       <div className={result ? 'block' : 'hidden'}>

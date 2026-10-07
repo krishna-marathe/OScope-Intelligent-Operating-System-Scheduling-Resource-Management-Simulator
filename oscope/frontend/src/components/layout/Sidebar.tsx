@@ -62,14 +62,14 @@ export function Sidebar() {
         </SidebarSection>
 
         <SidebarSection title="Visual Lab">
-          <div className="px-4 py-2 mx-2 text-sm text-slate-500 cursor-not-allowed group" title="Phase 13.4 Feature">
-            System View <span className="float-right text-[9px] uppercase border border-slate-700 px-1 rounded text-slate-600 bg-slate-800">3D Soon</span>
+          <div className="px-4 py-2 mx-2 text-sm text-slate-400 group" title="Integrated into all laboratories">
+            System View <span className="float-right text-[9px] uppercase border border-emerald-700/50 px-1 rounded text-emerald-400 bg-emerald-900/30">Integrated</span>
           </div>
         </SidebarSection>
 
         <SidebarSection title="Intelligence">
-          <div className="px-4 py-2 mx-2 text-sm text-slate-500 cursor-not-allowed group" title="Future Feature">
-            AI Copilot <span className="float-right text-[9px] uppercase border border-slate-700 px-1 rounded text-slate-600 bg-slate-800">Soon</span>
+          <div className="px-4 py-2 mx-2 text-sm text-slate-400 group" title="Integrated into intelligence panel">
+            AI Copilot <span className="float-right text-[9px] uppercase border border-emerald-700/50 px-1 rounded text-emerald-400 bg-emerald-900/30">Integrated</span>
           </div>
         </SidebarSection>
         

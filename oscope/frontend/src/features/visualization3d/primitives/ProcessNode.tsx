@@ -25,15 +25,19 @@ const STATE_COLORS = {
 
 export const ProcessNode: React.FC<ProcessNodeProps> = ({ entity, position }) => {
   const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
   const { setHoveredEntity, setSelectedEntity, selectedEntity, showLabels } = useVisualization3DStore();
   const [hovered, setHovered] = useState(false);
   const isSelected = selectedEntity?.id === entity.id;
 
   const color = STATE_COLORS[entity.state as keyof typeof STATE_COLORS] || '#3b82f6';
   
-  // Reduced motion support check could be added here (e.g., const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)'))
-  
   useFrame((_state, delta) => {
+    if (groupRef.current) {
+      const targetPos = new THREE.Vector3(...position);
+      groupRef.current.position.lerp(targetPos, 0.1);
+    }
+
     if (meshRef.current && entity.state === 'RUNNING') {
       meshRef.current.rotation.y += delta * 1.5;
     }
@@ -45,7 +49,7 @@ export const ProcessNode: React.FC<ProcessNodeProps> = ({ entity, position }) =>
   });
 
   return (
-    <group position={position}>
+    <group ref={groupRef} position={position}>
       <mesh
         ref={meshRef}
         onPointerOver={(e) => {

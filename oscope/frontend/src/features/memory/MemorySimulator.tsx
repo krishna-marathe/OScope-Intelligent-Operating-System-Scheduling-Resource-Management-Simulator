@@ -30,8 +30,8 @@ export function MemorySimulator() {
         title="PAGE REPLACEMENT TIMELINE" 
         status={result ? 'COMPLETED' : 'IDLE'}
         laboratoryType="MEMORY"
+        toolbar={<MemoryStepControls />}
       >
-        <MemoryStepControls />
         <MemoryVisualization />
       </SimulationViewport>
       <div className={result ? 'block' : 'hidden'}>
