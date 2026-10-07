@@ -49,52 +49,34 @@ export function DiskInput() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-      <h2 className="text-xl font-bold mb-4">Disk Scheduling Configuration</h2>
+    <div className="bg-slate-50 p-5 rounded-xl shadow-sm border border-slate-200">
+      <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-5">Disk Configuration</h3>
       
-      {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm" data-testid="disk-error">
-          {error}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="md:col-span-4">
-          <label className="block text-sm font-semibold mb-2">Request Queue (comma-separated cylinders)</label>
-          <input
-            type="text"
-            value={requestQueue}
-            onChange={e => setRequestQueue(e.target.value)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="e.g. 98, 183, 37, 122, 14, 124, 65, 67"
-            data-testid="disk-queue-input"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-semibold mb-2">Algorithm</label>
+      <div className="flex flex-col space-y-4 mb-6">
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Algorithm</label>
           <select
             value={algorithm}
             onChange={e => setAlgorithm(e.target.value)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm"
             data-testid="disk-algo-select"
           >
-            <option value="FCFS">FCFS</option>
-            <option value="SSTF">SSTF</option>
-            <option value="SCAN">SCAN</option>
-            <option value="C-SCAN">C-SCAN</option>
+            <option value="FCFS">FCFS (First-Come, First-Served)</option>
+            <option value="SSTF">SSTF (Shortest Seek Time First)</option>
+            <option value="SCAN">SCAN (Elevator)</option>
+            <option value="C-SCAN">C-SCAN (Circular SCAN)</option>
             <option value="LOOK">LOOK</option>
-            <option value="C-LOOK">C-LOOK</option>
+            <option value="C-LOOK">C-LOOK (Circular LOOK)</option>
           </select>
         </div>
 
         {isDirectional && (
-          <div>
-            <label className="block text-sm font-semibold mb-2">Direction</label>
+          <div className="flex flex-col space-y-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Direction</label>
             <select
               value={direction}
               onChange={e => setDirection(e.target.value as any)}
-              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+              className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm"
               data-testid="disk-dir-select"
             >
               <option value="LEFT">LEFT (Towards 0)</option>
@@ -103,35 +85,55 @@ export function DiskInput() {
           </div>
         )}
 
-        <div>
-          <label className="block text-sm font-semibold mb-2">Initial Head</label>
-          <input
-            type="number"
-            min="0"
-            value={initialHeadPosition}
-            onChange={e => setInitialHeadPosition(parseInt(e.target.value) || 0)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none"
-            data-testid="disk-head-input"
-          />
-        </div>
+        <div className="flex gap-4">
+          <div className="flex-1 flex flex-col space-y-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Initial Head</label>
+            <input
+              type="number"
+              min="0"
+              value={initialHeadPosition}
+              onChange={e => setInitialHeadPosition(parseInt(e.target.value) || 0)}
+              className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
+              data-testid="disk-head-input"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-semibold mb-2">Disk Size</label>
+          <div className="flex-1 flex flex-col space-y-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Disk Size</label>
+            <input
+              type="number"
+              min="1"
+              value={diskSize}
+              onChange={e => setDiskSize(parseInt(e.target.value) || 1)}
+              className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
+              data-testid="disk-size-input"
+            />
+          </div>
+        </div>
+        
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Request Queue</label>
           <input
-            type="number"
-            min="1"
-            value={diskSize}
-            onChange={e => setDiskSize(parseInt(e.target.value) || 1)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none"
-            data-testid="disk-size-input"
+            type="text"
+            value={requestQueue}
+            onChange={e => setRequestQueue(e.target.value)}
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
+            placeholder="e.g. 98, 183, 37, 122"
+            data-testid="disk-queue-input"
           />
         </div>
       </div>
 
+      {error && (
+        <div className="bg-red-50 text-red-600 font-medium p-3 rounded-md mb-4 text-sm border border-red-100" data-testid="disk-error">
+          {error}
+        </div>
+      )}
+
       <button
         onClick={handleSimulate}
         disabled={loading}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors disabled:opacity-50"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         data-testid="disk-simulate-btn"
       >
         {loading ? 'Simulating...' : 'Simulate Disk'}

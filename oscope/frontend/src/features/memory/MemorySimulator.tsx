@@ -5,7 +5,7 @@ import { MemoryStepControls } from './MemoryStepControls';
 import { SimulationWorkspace } from '../simulation/SimulationWorkspace';
 import { SimulationViewport } from '../simulation/SimulationViewport';
 import { useMemoryStore } from '../../store/useMemoryStore';
-import { Panel } from '../../components/ui/Panel';
+
 import { ActionButton } from '../../components/ui/ActionButton';
 
 export function MemorySimulator() {
@@ -19,9 +19,7 @@ export function MemorySimulator() {
   };
 
   const configPanel = (
-    <Panel title="MEMORY CONFIGURATION">
-      <MemoryInput />
-    </Panel>
+    <MemoryInput />
   );
 
   const visualizationPanel = (

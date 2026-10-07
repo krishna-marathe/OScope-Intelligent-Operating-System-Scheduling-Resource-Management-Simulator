@@ -9,7 +9,7 @@ interface ExperimentState {
   error: string | null;
 }
 
-export const useExperimentStore = create<ExperimentState>((set) => ({
+export const useExperimentStore = create<ExperimentState>(() => ({
   experiments: [],
   selectedExperiment: null,
   baselineExperiment: null,

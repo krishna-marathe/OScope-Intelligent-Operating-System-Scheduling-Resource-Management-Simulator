@@ -9,39 +9,39 @@ export function DiskStepControls() {
   const totalSteps = result.movement_steps.length;
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-100 mb-6 flex items-center justify-between">
-      <div className="flex items-center gap-2">
+    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center gap-2">
         <button 
           onClick={() => setCurrentStep(1)}
           disabled={currentStep <= 1}
-          className="px-3 py-1 bg-slate-100 rounded disabled:opacity-50 hover:bg-slate-200"
+          className="px-3 py-1.5 text-sm font-semibold bg-slate-100 text-slate-600 rounded-md disabled:opacity-50 hover:bg-slate-200 transition-colors"
         >
           ⏮ First
         </button>
         <button 
           onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
           disabled={currentStep <= 1}
-          className="px-3 py-1 bg-slate-100 rounded disabled:opacity-50 hover:bg-slate-200"
+          className="px-3 py-1.5 text-sm font-semibold bg-slate-100 text-slate-600 rounded-md disabled:opacity-50 hover:bg-slate-200 transition-colors"
         >
           ◀ Prev
         </button>
         <button 
           onClick={() => setCurrentStep(Math.min(totalSteps, currentStep + 1))}
           disabled={currentStep >= totalSteps}
-          className="px-3 py-1 bg-slate-100 rounded disabled:opacity-50 hover:bg-slate-200"
+          className="px-3 py-1.5 text-sm font-semibold bg-slate-100 text-slate-600 rounded-md disabled:opacity-50 hover:bg-slate-200 transition-colors"
         >
           Next ▶
         </button>
         <button 
           onClick={() => setCurrentStep(totalSteps)}
           disabled={currentStep >= totalSteps}
-          className="px-3 py-1 bg-slate-100 rounded disabled:opacity-50 hover:bg-slate-200"
+          className="px-3 py-1.5 text-sm font-semibold bg-slate-100 text-slate-600 rounded-md disabled:opacity-50 hover:bg-slate-200 transition-colors"
         >
           Last ⏭
         </button>
       </div>
-      <div className="flex items-center gap-4">
-        <div className="font-mono text-sm font-bold bg-white px-3 py-1.5 rounded border border-slate-200">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="font-mono text-sm font-bold bg-slate-50 text-slate-700 px-3 py-1.5 rounded-md border border-slate-200">
           Step: {currentStep} / {totalSteps}
         </div>
         <SceneControls />

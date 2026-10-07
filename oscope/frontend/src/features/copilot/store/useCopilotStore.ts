@@ -14,7 +14,7 @@ interface CopilotState {
   panelVisible: boolean;
 }
 
-export const useCopilotStore = create<CopilotState>((set) => ({
+export const useCopilotStore = create<CopilotState>(() => ({
   messages: [],
   loading: false,
   error: null,

@@ -5,7 +5,7 @@ import { DeadlockStepControls } from './DeadlockStepControls';
 import { SimulationWorkspace } from '../simulation/SimulationWorkspace';
 import { SimulationViewport } from '../simulation/SimulationViewport';
 import { useDeadlockStore } from '../../store/useDeadlockStore';
-import { Panel } from '../../components/ui/Panel';
+
 import { ActionButton } from '../../components/ui/ActionButton';
 
 export function DeadlockSimulator() {
@@ -38,9 +38,7 @@ export function DeadlockSimulator() {
   };
 
   const configPanel = (
-    <Panel title="DEADLOCK CONFIGURATION">
-      <DeadlockInput />
-    </Panel>
+    <DeadlockInput />
   );
 
   const visualizationPanel = (

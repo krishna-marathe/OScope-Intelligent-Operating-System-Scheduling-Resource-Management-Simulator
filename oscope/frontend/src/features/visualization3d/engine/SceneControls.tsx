@@ -27,7 +27,7 @@ export const SceneControls: React.FC = () => {
   if (!is3DMode) return null;
 
   return (
-    <div className="flex gap-1 ml-2 border-l pl-4 border-slate-300">
+    <div className="flex flex-wrap gap-1 ml-2 border-l pl-4 border-slate-300">
       <button 
         onClick={handleFitCamera}
         title="Fit Scene"

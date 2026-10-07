@@ -7,7 +7,7 @@ interface IntelligenceState {
   error: string | null;
 }
 
-export const useIntelligenceStore = create<IntelligenceState>((set) => ({
+export const useIntelligenceStore = create<IntelligenceState>(() => ({
   currentAnalysis: null,
   selectedObjectiveWeights: {
     waitingTime: 0.25,

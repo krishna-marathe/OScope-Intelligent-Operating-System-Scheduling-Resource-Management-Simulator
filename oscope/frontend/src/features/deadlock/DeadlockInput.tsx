@@ -133,130 +133,147 @@ export function DeadlockInput() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-      <h2 className="text-xl font-bold mb-4">Deadlock Configuration</h2>
+    <div className="bg-slate-50 p-5 rounded-xl shadow-sm border border-slate-200">
+      <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-5">Deadlock Configuration</h3>
       
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm" data-testid="deadlock-error">
+        <div className="bg-red-50 text-red-600 font-medium p-3 rounded-md mb-4 text-sm border border-red-100" data-testid="deadlock-error">
           {error}
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div>
-          <label className="block text-sm font-semibold mb-2">Process Count</label>
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Process Count</label>
           <input
             type="number" min="1" max="20"
             value={processCount}
             onChange={e => handleProcessCountChange(parseInt(e.target.value) || 1)}
-            className="w-full p-2 border rounded"
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
             data-testid="process-count"
           />
         </div>
-        <div>
-          <label className="block text-sm font-semibold mb-2">Resource Count</label>
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Resource Count</label>
           <input
             type="number" min="1" max="10"
             value={resourceCount}
             onChange={e => handleResourceCountChange(parseInt(e.target.value) || 1)}
-            className="w-full p-2 border rounded"
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
             data-testid="resource-count"
           />
         </div>
       </div>
       
       <div className="mb-6">
-        <label className="block text-sm font-semibold mb-2">Available Resources</label>
-        <div className="flex gap-2">
-          {available.map((val, j) => (
-            <input key={`avail-${j}`}
-              type="number" min="0" value={val}
-              onChange={e => updateArray('available', j, parseInt(e.target.value))}
-              className="w-16 p-2 border rounded text-center"
-              data-testid={`avail-${j}`}
-            />
-          ))}
+        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Available Resources</label>
+        <div className="overflow-x-auto pb-2">
+          <div className="flex gap-2">
+            {available.map((val, j) => (
+              <div key={`avail-${j}`} className="flex flex-col items-center min-w-[3.5rem]">
+                <span className="text-[10px] font-bold text-slate-400 mb-1">R{j}</span>
+                <input
+                  type="number" min="0" value={val}
+                  onChange={e => updateArray('available', j, parseInt(e.target.value))}
+                  className="w-14 border border-slate-300 p-2 rounded text-center text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                  data-testid={`avail-${j}`}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label className="block text-sm font-semibold mb-2">Allocation Matrix</label>
-          <div className="flex flex-col gap-1">
-            {allocation.map((row, i) => (
-              <div key={`alloc-row-${i}`} className="flex gap-2 items-center">
-                <span className="w-8 text-sm text-slate-500 font-mono">P{i}</span>
-                {row.map((val, j) => (
-                  <input key={`alloc-${i}-${j}`}
-                    type="number" min="0" value={val}
-                    onChange={e => updateMatrix('allocation', i, j, parseInt(e.target.value))}
-                    className="w-12 p-1 border rounded text-center text-sm"
-                    data-testid={`alloc-${i}-${j}`}
-                  />
-                ))}
-              </div>
-            ))}
+      <div className="flex flex-col space-y-6 mb-6">
+        <div className="bg-white p-3 rounded-lg border border-slate-200">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Allocation Matrix</label>
+          <div className="overflow-x-auto pb-2">
+            <div className="flex flex-col gap-2 min-w-max">
+              {allocation.map((row, i) => (
+                <div key={`alloc-row-${i}`} className="flex gap-2 items-center">
+                  <span className="w-6 text-xs font-bold text-slate-400">P{i}</span>
+                  {row.map((val, j) => (
+                    <input key={`alloc-${i}-${j}`}
+                      type="number" min="0" value={val}
+                      onChange={e => updateMatrix('allocation', i, j, parseInt(e.target.value))}
+                      className="w-12 border border-slate-300 p-1.5 rounded text-center text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                      title={`P${i} R${j}`}
+                      data-testid={`alloc-${i}-${j}`}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         
-        <div>
-          <label className="block text-sm font-semibold mb-2">Maximum Matrix</label>
-          <div className="flex flex-col gap-1">
-            {maximum.map((row, i) => (
-              <div key={`max-row-${i}`} className="flex gap-2 items-center">
-                <span className="w-8 text-sm text-slate-500 font-mono">P{i}</span>
-                {row.map((val, j) => (
-                  <input key={`max-${i}-${j}`}
-                    type="number" min="0" value={val}
-                    onChange={e => updateMatrix('maximum', i, j, parseInt(e.target.value))}
-                    className="w-12 p-1 border rounded text-center text-sm"
-                    data-testid={`max-${i}-${j}`}
-                  />
-                ))}
-              </div>
-            ))}
+        <div className="bg-white p-3 rounded-lg border border-slate-200">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Maximum Matrix</label>
+          <div className="overflow-x-auto pb-2">
+            <div className="flex flex-col gap-2 min-w-max">
+              {maximum.map((row, i) => (
+                <div key={`max-row-${i}`} className="flex gap-2 items-center">
+                  <span className="w-6 text-xs font-bold text-slate-400">P{i}</span>
+                  {row.map((val, j) => (
+                    <input key={`max-${i}-${j}`}
+                      type="number" min="0" value={val}
+                      onChange={e => updateMatrix('maximum', i, j, parseInt(e.target.value))}
+                      className="w-12 border border-slate-300 p-1.5 rounded text-center text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                      title={`P${i} R${j}`}
+                      data-testid={`max-${i}-${j}`}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-6 border-t pt-4">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="mb-6 border-t border-slate-200 pt-5">
+        <label className="flex items-center gap-2 cursor-pointer mb-4">
           <input 
             type="checkbox" 
             id="reqToggle"
             checked={requestEnabled}
             onChange={e => setRequestEnabled(e.target.checked)}
+            className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             data-testid="req-toggle"
           />
-          <label htmlFor="reqToggle" className="font-semibold text-sm">Simulate Resource Request</label>
-        </div>
+          <span className="text-sm font-semibold text-slate-700">Simulate Resource Request</span>
+        </label>
         
         {requestEnabled && (
-          <div className="flex items-center gap-4 bg-slate-50 p-4 rounded">
-            <div>
-              <label className="block text-xs font-semibold mb-1">Process</label>
+          <div className="flex flex-col space-y-4 bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+            <div className="flex flex-col space-y-1.5">
+              <label className="text-xs font-bold text-blue-700/70 uppercase tracking-wider">Target Process</label>
               <select 
                 value={reqProcessId}
                 onChange={e => setReqProcessId(parseInt(e.target.value))}
-                className="p-2 border rounded bg-white text-sm"
+                className="w-full border border-blue-200 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 bg-white text-sm outline-none"
                 data-testid="req-process"
               >
                 {Array.from({length: processCount}).map((_, i) => (
-                  <option key={i} value={i}>P{i}</option>
+                  <option key={i} value={i}>Process P{i}</option>
                 ))}
               </select>
             </div>
-            <div>
-              <label className="block text-xs font-semibold mb-1">Request Vector</label>
-              <div className="flex gap-2">
-                {reqVector.map((val, j) => (
-                  <input key={`req-${j}`}
-                    type="number" min="0" value={val}
-                    onChange={e => updateArray('request', j, parseInt(e.target.value))}
-                    className="w-16 p-2 border rounded text-center text-sm"
-                    data-testid={`req-val-${j}`}
-                  />
-                ))}
+            <div className="flex flex-col space-y-1.5">
+              <label className="text-xs font-bold text-blue-700/70 uppercase tracking-wider">Request Vector</label>
+              <div className="overflow-x-auto pb-2">
+                <div className="flex gap-2">
+                  {reqVector.map((val, j) => (
+                    <div key={`req-${j}`} className="flex flex-col items-center min-w-[3rem]">
+                      <span className="text-[10px] font-bold text-blue-500/70 mb-1">R{j}</span>
+                      <input
+                        type="number" min="0" value={val}
+                        onChange={e => updateArray('request', j, parseInt(e.target.value))}
+                        className="w-12 border border-blue-200 p-2 rounded text-center text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                        data-testid={`req-val-${j}`}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -266,10 +283,10 @@ export function DeadlockInput() {
       <button
         onClick={handleSimulate}
         disabled={loading}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors disabled:opacity-50"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         data-testid="deadlock-simulate-btn"
       >
-        {loading ? 'Simulating...' : 'Simulate Safety'}
+        {loading ? 'Simulating...' : 'Simulate Safety Algorithm'}
       </button>
     </div>
   );

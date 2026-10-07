@@ -5,7 +5,7 @@ import { DiskStepControls } from './DiskStepControls';
 import { SimulationWorkspace } from '../simulation/SimulationWorkspace';
 import { SimulationViewport } from '../simulation/SimulationViewport';
 import { useDiskStore } from '../../store/useDiskStore';
-import { Panel } from '../../components/ui/Panel';
+
 import { ActionButton } from '../../components/ui/ActionButton';
 
 export function DiskSimulator() {
@@ -19,9 +19,7 @@ export function DiskSimulator() {
   };
 
   const configPanel = (
-    <Panel title="DISK CONFIGURATION">
-      <DiskInput />
-    </Panel>
+    <DiskInput />
   );
 
   const visualizationPanel = (

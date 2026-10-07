@@ -1,3 +1,3 @@
-export function getCpuRecommendation(simResults: any[]) {
+export function getCpuRecommendation(_simResults: any[]) {
   return null;
 }

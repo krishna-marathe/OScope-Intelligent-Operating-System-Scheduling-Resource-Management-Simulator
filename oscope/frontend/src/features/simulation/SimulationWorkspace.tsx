@@ -29,12 +29,11 @@ export function SimulationWorkspace({
           </div>
         }
       />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-4 xl:col-span-3 space-y-6 lg:sticky lg:top-20">
+      <div className="flex flex-col lg:grid gap-6 items-start" style={{ gridTemplateColumns: 'minmax(300px, 380px) minmax(0, 1fr)' }}>
+        <div className="w-full space-y-6 lg:sticky lg:top-20">
           {configPanel}
         </div>
-        <div className="lg:col-span-8 xl:col-span-9 space-y-6">
+        <div className="w-full space-y-6 min-w-0">
           {visualizationPanel}
           {metricsPanel}
         </div>

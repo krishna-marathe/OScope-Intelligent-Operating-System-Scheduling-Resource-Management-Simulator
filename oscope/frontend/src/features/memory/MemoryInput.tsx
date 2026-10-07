@@ -45,59 +45,59 @@ export function MemoryInput() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-      <h2 className="text-xl font-bold mb-4">Memory Configuration</h2>
+    <div className="bg-slate-50 p-5 rounded-xl shadow-sm border border-slate-200">
+      <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-5">Memory Configuration</h3>
       
-      {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm" data-testid="memory-error">
-          {error}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="md:col-span-2">
-          <label className="block text-sm font-semibold mb-2">Reference Sequence (comma-separated)</label>
+      <div className="flex flex-col space-y-4 mb-6">
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Reference Sequence</label>
           <input
             type="text"
             value={referenceSequence}
             onChange={e => setReferenceSequence(e.target.value)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none"
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
             placeholder="e.g. 1, 2, 3, 4, 1, 2, 5"
             data-testid="ref-sequence-input"
           />
         </div>
         
-        <div>
-          <label className="block text-sm font-semibold mb-2">Algorithm</label>
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Algorithm</label>
           <select
             value={algorithm}
             onChange={e => setAlgorithm(e.target.value)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm"
             data-testid="algo-select"
           >
-            <option value="FIFO">FIFO</option>
-            <option value="LRU">LRU</option>
-            <option value="OPTIMAL">OPTIMAL</option>
+            <option value="FIFO">FIFO (First-In, First-Out)</option>
+            <option value="LRU">LRU (Least Recently Used)</option>
+            <option value="OPTIMAL">Optimal</option>
           </select>
         </div>
 
-        <div>
-          <label className="block text-sm font-semibold mb-2">Frame Count</label>
+        <div className="flex flex-col space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Frame Count</label>
           <input
             type="number"
             min="1"
             value={frameCount}
             onChange={e => setFrameCount(parseInt(e.target.value) || 0)}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none"
+            className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-sm"
             data-testid="frame-count-input"
           />
         </div>
       </div>
 
+      {error && (
+        <div className="bg-red-50 text-red-600 font-medium p-3 rounded-md mb-4 text-sm border border-red-100" data-testid="memory-error">
+          {error}
+        </div>
+      )}
+
       <button
         onClick={handleSimulate}
         disabled={loading}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors disabled:opacity-50"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         data-testid="simulate-btn"
       >
         {loading ? 'Simulating...' : 'Simulate Memory'}
